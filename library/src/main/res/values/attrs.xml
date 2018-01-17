@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FloatingLabelEditText">
+        <attr name="j_fle_colorHighlight" format = "color"/>
+        <attr name="j_fle_colorError" format = "color"/>
+        <attr name="j_fle_hint" format ="string" />
+        <attr name="j_fle_thickness" format = "dimension"/>
+        <attr name="j_fle_label_horizontal_margin"  format="dimension"/>
+        <attr name="j_fle_label_vertical_margin" format = "dimension"/>
+        <attr name="j_fle_label_textSize" format="dimension" />
+        <attr name="j_fle_error_horizontal_margin" format= "dimension"/>
+        <attr name="j_fle_error_vertical_margin" format="dimension"/>
+        <attr name="j_fle_error_textSize" format="dimension" />
+        <attr name="j_fle_float_anim_duration" format="integer"/>
+        <attr name="j_fle_error_anim_duration" format="integer"/>
+    </declare-styleable>
+</resources>
