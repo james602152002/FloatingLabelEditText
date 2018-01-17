@@ -107,11 +107,11 @@ public class FloatingLabelEditText extends AppCompatEditText {
 //        dividerPaint.setStrokeWidth(divider_stroke_width);
 //        labelPaint.setTextSize(hint_text_size);
 //        errorPaint.setTextSize(error_text_size);
-//        ANIM_DURATION = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_float_anim_duration, 800);
-//        ERROR_ANIM_DURATION_PER_WIDTH = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_error_anim_duration, 8000);
+        ANIM_DURATION = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_float_anim_duration, 800);
+        ERROR_ANIM_DURATION_PER_WIDTH = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_error_anim_duration, 8000);
 
         if (ANIM_DURATION < 0)
-            ANIM_DURATION = 20000;
+            ANIM_DURATION = 800;
         if (ERROR_ANIM_DURATION_PER_WIDTH < 0)
             ERROR_ANIM_DURATION_PER_WIDTH = 8000;
 
@@ -123,8 +123,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
         TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint, android.R.attr.textColorHint});
         label = hintTypedArray.getString(0);
-        setHintTextColor(0);
         hint_text_color = hintTypedArray.getColor(1, Color.GRAY);
+        setHintTextColor(0);
         hintTypedArray.recycle();
         hintTypedArray = null;
 
@@ -176,7 +176,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void startAnimator(float startValue, float endValue) {
-        final ObjectAnimator animator = ObjectAnimator.ofFloat(FloatingLabelEditText.this, "float_label_anim_percentage", startValue, endValue);
+        final ObjectAnimator animator = ObjectAnimator.ofFloat(this, "float_label_anim_percentage", startValue, endValue);
         animator.setInterpolator(new AccelerateInterpolator(3));
         animator.setDuration(ANIM_DURATION);
         animator.start();
@@ -305,7 +305,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     final private void setFloat_label_anim_percentage(float float_label_anim_percentage) {
         this.float_label_anim_percentage = float_label_anim_percentage;
-        invalidate();
+        postInvalidate();
     }
 
     public float getLabel_text_size() {
