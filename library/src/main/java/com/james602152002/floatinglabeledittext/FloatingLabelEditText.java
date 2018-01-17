@@ -111,13 +111,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
 //        ERROR_ANIM_DURATION_PER_WIDTH = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_error_anim_duration, 8000);
 
         if (ANIM_DURATION < 0)
-            ANIM_DURATION = 800;
+            ANIM_DURATION = 20000;
         if (ERROR_ANIM_DURATION_PER_WIDTH < 0)
             ERROR_ANIM_DURATION_PER_WIDTH = 8000;
 
         TypedArray textTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.textSize});
         hint_text_size = textTypedArray.getDimensionPixelOffset(0, sp2Px(20));
-        hint_cell_height = (short) Math.round(label_text_size);
+        hint_cell_height = (short) Math.round(hint_text_size);
         textTypedArray.recycle();
         textTypedArray = null;
 
@@ -168,7 +168,6 @@ public class FloatingLabelEditText extends AppCompatEditText {
                 } else {
                     startAnimator(1, 0);
                 }
-                invalidate();
                 if (customizeListener != null) {
                     customizeListener.onFocusChange(v, hasFocus);
                 }
