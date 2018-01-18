@@ -101,7 +101,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 //        error_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_vertical_margin, dp2px(3));
         highlight_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorHighlight, primary_color);
         error_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorError, Color.RED);
-//        divider_stroke_width = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_thickness, dp2px(2));
+        divider_stroke_width = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_thickness, dp2px(2));
         label_text_size = typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_textSize, sp2Px(16));
         error_text_size = typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_textSize, sp2Px(16));
 //        dividerPaint.setStrokeWidth(divider_stroke_width);
@@ -318,15 +318,6 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public void setLabel_text_size(float label_text_size) {
         this.label_text_size = label_text_size;
-        updatePadding();
-    }
-
-    public float getHint_text_size() {
-        return hint_text_size;
-    }
-
-    public void setHint_text_size(float hint_text_size) {
-        this.hint_text_size = hint_text_size;
         updatePadding();
     }
 
