@@ -41,6 +41,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private final TextPaint errorPaint;
 
     private int highlight_color;
+    private int divider_color;
     private int hint_text_color;
     private int error_color;
     private CharSequence label;
@@ -89,24 +90,24 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray defaultArray = context.obtainStyledAttributes(new int[]{R.attr.colorControlNormal, R.attr.colorAccent});
+        TypedArray defaultArray = context.obtainStyledAttributes(new int[]{R.attr.colorPrimary});
         final int primary_color = defaultArray.getColor(0, 0);
         defaultArray.recycle();
         defaultArray = null;
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.FloatingLabelEditText);
-//        label_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_horizontal_margin, 0);
-//        label_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_vertical_margin, 0);
-//        error_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_horizontal_margin, 0);
+        label_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_horizontal_margin, 0);
+        label_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_vertical_margin, 0);
+        error_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_horizontal_margin, 0);
         divider_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_divider_vertical_margin, dp2px(3));
         highlight_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorHighlight, primary_color);
+        setDivider_color(typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorDivider, Color.GRAY));
         error_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorError, Color.RED);
         divider_stroke_width = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_thickness, dp2px(2));
         label_text_size = typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_textSize, sp2Px(16));
         error_text_size = typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_textSize, sp2Px(16));
-//        dividerPaint.setStrokeWidth(divider_stroke_width);
-//        labelPaint.setTextSize(hint_text_size);
-//        errorPaint.setTextSize(error_text_size);
+        dividerPaint.setStrokeWidth(divider_stroke_width);
+        errorPaint.setTextSize(error_text_size);
         ANIM_DURATION = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_float_anim_duration, 800);
         ERROR_ANIM_DURATION_PER_WIDTH = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_error_anim_duration, 8000);
 
@@ -120,7 +121,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (getTextSize() != hint_text_size) {
             setTextSize(hint_text_size);
         }
-
+        labelPaint.setTextSize(hint_text_size);
         hint_cell_height = (short) Math.round(hint_text_size);
         textTypedArray.recycle();
         textTypedArray = null;
@@ -226,6 +227,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
         final float current_text_size = hint_text_size + (label_text_size - hint_text_size) * float_label_anim_percentage;
         labelPaint.setTextSize(current_text_size);
 
+        if (getText().length() > 0) {
+            labelPaint.setAlpha((int) (255 * float_label_anim_percentage));
+        } else {
+            labelPaint.setAlpha(255);
+        }
+
         final int label_paint_dy = (int) (padding_top + label_text_size + current_text_size * (1 - float_label_anim_percentage) * .93f);
 
         if (label != null)
@@ -233,7 +240,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
         final int divider_y = (int) (padding_top + label_text_size + (hint_cell_height > 0 ? hint_cell_height : hint_text_size) + divider_vertical_margin);
         if (!is_error) {
-            dividerPaint.setColor(highlight_color);
+            dividerPaint.setColor(hasFocus ? highlight_color : divider_color);
         } else {
             dividerPaint.setColor(error_color);
             final int error_paint_dy = (int) (divider_y + error_text_size + divider_vertical_margin);
@@ -479,5 +486,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
         hint_text_size = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
         hint_cell_height = (short) Math.round(hint_text_size);
         super.setTextSize(unit, size);
+    }
+
+    public int getDivider_color() {
+        return divider_color;
+    }
+
+    public void setDivider_color(int divider_color) {
+        this.divider_color = divider_color;
     }
 }
