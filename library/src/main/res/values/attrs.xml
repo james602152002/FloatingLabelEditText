@@ -8,8 +8,8 @@
         <attr name="j_fle_label_horizontal_margin"  format="dimension"/>
         <attr name="j_fle_label_vertical_margin" format = "dimension"/>
         <attr name="j_fle_label_textSize" format="dimension" />
+        <attr name="j_fle_divider_vertical_margin" format="dimension"/>
         <attr name="j_fle_error_horizontal_margin" format= "dimension"/>
-        <attr name="j_fle_error_vertical_margin" format="dimension"/>
         <attr name="j_fle_error_textSize" format="dimension" />
         <attr name="j_fle_float_anim_duration" format="integer"/>
         <attr name="j_fle_error_anim_duration" format="integer"/>

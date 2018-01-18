@@ -36,7 +36,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private short divider_stroke_width;
     private final Paint dividerPaint;
 
-    private short error_vertical_margin;
+    private short divider_vertical_margin;
     private short error_horizontal_margin;
     private final TextPaint errorPaint;
 
@@ -98,7 +98,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 //        label_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_horizontal_margin, 0);
 //        label_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_vertical_margin, 0);
 //        error_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_horizontal_margin, 0);
-//        error_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_vertical_margin, dp2px(3));
+        divider_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_divider_vertical_margin, dp2px(3));
         highlight_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorHighlight, primary_color);
         error_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorError, Color.RED);
         divider_stroke_width = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_thickness, dp2px(2));
@@ -211,7 +211,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         this.padding_right = (short) right;
         this.padding_bottom = (short) bottom;
         super.setPadding(left, top + label_vertical_margin + (int) label_text_size, right,
-                bottom + divider_stroke_width + (int) error_text_size + (error_vertical_margin << 1));
+                bottom + divider_stroke_width + (int) error_text_size + (divider_vertical_margin * 3));
     }
 
     private void updatePadding() {
@@ -231,12 +231,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (label != null)
             drawSpannableString(canvas, label, labelPaint, label_horizontal_margin, label_paint_dy);
 
-        final int divider_y = (int) (padding_top + label_text_size + (hint_cell_height > 0 ? hint_cell_height : hint_text_size));
+        final int divider_y = (int) (padding_top + label_text_size + (hint_cell_height > 0 ? hint_cell_height : hint_text_size) + divider_vertical_margin);
         if (!is_error) {
             dividerPaint.setColor(highlight_color);
         } else {
             dividerPaint.setColor(error_color);
-            final int error_paint_dy = (int) (divider_y + error_text_size + error_vertical_margin);
+            final int error_paint_dy = (int) (divider_y + error_text_size + divider_vertical_margin);
             final float error_text_width = errorPaint.measureText(error.toString());
             final int hint_repeat_space_width = getWidth() / 3;
             final float max_dx = hint_repeat_space_width + error_text_width;
@@ -349,7 +349,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public void setErrorMargin(int horizontal_margin, int vertical_margin) {
         this.error_horizontal_margin = (short) horizontal_margin;
-        this.error_vertical_margin = (short) vertical_margin;
+        this.divider_vertical_margin = (short) vertical_margin;
+        updatePadding();
+    }
+
+    public void setDivider_vertical_margin(int divider_vertical_margin) {
+        this.divider_vertical_margin = (short) divider_vertical_margin;
         updatePadding();
     }
 
