@@ -117,6 +117,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
         TypedArray textTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.textSize});
         hint_text_size = textTypedArray.getDimensionPixelOffset(0, sp2Px(20));
+        if (getTextSize() != hint_text_size) {
+            setTextSize(hint_text_size);
+        }
+
         hint_cell_height = (short) Math.round(hint_text_size);
         textTypedArray.recycle();
         textTypedArray = null;
@@ -132,9 +136,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         Drawable background = backgroundTypedArray.getDrawable(0);
         if (background != null) {
             setBackgroundDrawable(background);
-        } else {
+        } else
             setBackgroundColor(0);
-        }
         backgroundTypedArray.recycle();
         backgroundTypedArray = null;
 
@@ -223,7 +226,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         final float current_text_size = hint_text_size + (label_text_size - hint_text_size) * float_label_anim_percentage;
         labelPaint.setTextSize(current_text_size);
 
-        final int label_paint_dy = (int) (padding_top + current_text_size + (1 - float_label_anim_percentage) * (hint_cell_height * .5f));
+        final int label_paint_dy = (int) (padding_top + label_text_size + current_text_size * (1 - float_label_anim_percentage) * .93f);
 
         if (label != null)
             drawSpannableString(canvas, label, labelPaint, label_horizontal_margin, label_paint_dy);
@@ -477,8 +480,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         } else {
             r = c.getResources();
         }
-        label_text_size = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
-        hint_cell_height = (short) Math.round(label_text_size);
+        hint_text_size = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
+        hint_cell_height = (short) Math.round(hint_text_size);
         super.setTextSize(unit, size);
     }
 }
