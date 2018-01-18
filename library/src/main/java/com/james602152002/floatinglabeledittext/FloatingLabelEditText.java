@@ -121,9 +121,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
         textTypedArray.recycle();
         textTypedArray = null;
 
-        TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint, android.R.attr.textColorHint});
+        TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint});
         label = hintTypedArray.getString(0);
-        hint_text_color = hintTypedArray.getColor(1, Color.GRAY);
+        hint_text_color = getCurrentHintTextColor();
         setHintTextColor(0);
         hintTypedArray.recycle();
         hintTypedArray = null;
@@ -132,8 +132,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
         Drawable background = backgroundTypedArray.getDrawable(0);
         if (background != null) {
             setBackgroundDrawable(background);
-        } else
+        } else {
             setBackgroundColor(0);
+        }
         backgroundTypedArray.recycle();
         backgroundTypedArray = null;
 
