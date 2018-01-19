@@ -184,7 +184,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
         final ObjectAnimator animator = ObjectAnimator.ofFloat(this, "float_label_anim_percentage", startValue, endValue);
         animator.setInterpolator(new AccelerateInterpolator(3));
         animator.setDuration(ANIM_DURATION);
-        animator.start();
+        post(new Runnable() {
+            @Override
+            public void run() {
+                animator.start();
+            }
+        });
     }
 
     @Override
@@ -195,6 +200,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
             customizeListener = l;
         }
         super.setOnFocusChangeListener(mListener);
+    }
+
+    @Override
+    public OnFocusChangeListener getOnFocusChangeListener() {
+        if (customizeListener != null)
+            return customizeListener;
+        return super.getOnFocusChangeListener();
     }
 
     private int dp2px(float dpValue) {
@@ -238,7 +250,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (label != null)
             drawSpannableString(canvas, label, labelPaint, label_horizontal_margin, label_paint_dy);
 
-        final int divider_y = (int) (padding_top + label_text_size + (hint_cell_height > 0 ? hint_cell_height : hint_text_size) + divider_vertical_margin);
+        final int divider_y = (int) (padding_top + label_text_size + hint_cell_height + divider_vertical_margin);
         if (!is_error) {
             dividerPaint.setColor(hasFocus ? highlight_color : divider_color);
         } else {
@@ -365,6 +377,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
         updatePadding();
     }
 
+    public int getDivider_vertical_margin() {
+        return divider_vertical_margin;
+    }
+
     public CharSequence getLabel() {
         return label;
     }
@@ -387,7 +403,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public void setErrorAnimDuration(int ERROR_ANIM_DURATION) {
         if (ERROR_ANIM_DURATION < 0)
-            ERROR_ANIM_DURATION_PER_WIDTH = 8000;
+            ERROR_ANIM_DURATION = 8000;
         this.ERROR_ANIM_DURATION_PER_WIDTH = (short) ERROR_ANIM_DURATION;
     }
 
@@ -395,7 +411,14 @@ public class FloatingLabelEditText extends AppCompatEditText {
         return ERROR_ANIM_DURATION_PER_WIDTH;
     }
 
-    public int getHighlight_color() {
+    @Override
+    public void setHighlightColor(int color) {
+        this.highlight_color = color;
+        super.setHighlightColor(color);
+    }
+
+    @Override
+    public int getHighlightColor() {
         return highlight_color;
     }
 
@@ -426,15 +449,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             if (getWidth() > 0) {
                 startErrorAnimation();
             } else {
-                addOnLayoutChangeListener(new OnLayoutChangeListener() {
-                    @Override
-                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                        if (v.getWidth() > 0) {
-                            startErrorAnimation();
-                        }
-                        v.removeOnLayoutChangeListener(this);
-                    }
-                });
+                startErrorAnimation();
             }
         } else {
             if (errorAnimator != null) {
@@ -447,7 +462,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     private void startErrorAnimation() {
         final float error_length = errorPaint.measureText(error.toString());
-        final int width = getWidth();
+        int w = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        measure(w, h);
+        final int width = getMeasuredWidth();
         if (error_length > width) {
             error_percentage = 0;
             if (errorAnimator == null)
@@ -456,8 +474,15 @@ public class FloatingLabelEditText extends AppCompatEditText {
             errorAnimator.setRepeatMode(ValueAnimator.RESTART);
             errorAnimator.setStartDelay(ANIM_DURATION);
             short duration = (short) (ERROR_ANIM_DURATION_PER_WIDTH * error_length / width);
+            if (duration < 0)
+                duration = 8000;
             errorAnimator.setDuration(duration);
-            errorAnimator.start();
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    errorAnimator.start();
+                }
+            });
         }
     }
 
