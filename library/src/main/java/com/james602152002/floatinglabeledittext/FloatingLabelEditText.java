@@ -233,18 +233,22 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
             @Override
             public void afterTextChanged(Editable s) {
+                boolean error = false;
                 if (validatorList != null) {
                     for (RegexValidator regex : validatorList) {
                         if (regex != null) {
                             String error_msg = regex.getError_message(s);
                             if (error_msg != null) {
-                                error = error_msg;
+                                setError(error_msg);
+                                error = true;
                                 break;
                             }
                         }
                     }
                 }
-                invalidate();
+                if (error) {
+                    setError(null);
+                }
             }
         });
     }
@@ -506,6 +510,15 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void startErrorAnimation() {
+        if (errorAnimator != null) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    errorAnimator.cancel();
+                    errorAnimator = null;
+                }
+            });
+        }
         final float error_length = errorPaint.measureText(error.toString());
         int w = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
