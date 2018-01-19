@@ -507,13 +507,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     @Override
     public void setTextSize(int unit, float size) {
         Context c = getContext();
-        Resources r;
-
-        if (c == null) {
-            r = Resources.getSystem();
-        } else {
-            r = c.getResources();
-        }
+        Resources r = c.getResources();
         hint_text_size = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
         hint_cell_height = (short) Math.round(hint_text_size);
         super.setTextSize(unit, size);
