@@ -64,7 +64,9 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         field.setAccessible(true);
         field.set(customView, true);
         customView.dispatchDraw(canvas);
-        customView.setError("error");
+        customView.setError("error.............................................................");
+        customView.dispatchDraw(canvas);
+        customView.setErrorMargin(10, 0);
         customView.dispatchDraw(canvas);
     }
 
@@ -135,6 +137,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     @Test
     public void testAnimDuration() {
         final int duration = -1;
+        customView.setAnimDuration(0);
         customView.setAnimDuration(duration);
         assertEquals(800, customView.getAnimDuration());
     }
@@ -142,6 +145,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     @Test
     public void testErrorAnimDuration() {
         final int duration = -1;
+        customView.setErrorAnimDuration(0);
         customView.setErrorAnimDuration(duration);
         assertEquals(8000, customView.getErrorAnimDuration());
     }
@@ -173,6 +177,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         final String error = "long error..............................................................";
         customView.setError(error);
         assertEquals(customView.getError(), error);
+        customView.setError(null);
     }
 
     @Test
@@ -180,6 +185,20 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         final int color = Color.RED;
         customView.setDivider_color(color);
         assertEquals(customView.getDivider_color(), color);
+    }
+
+    @Test
+    public void testOnFocusChangeListener() {
+        View.OnFocusChangeListener listener = customView.getOnFocusChangeListener();
+        final View view = new View(getContext());
+        listener.onFocusChange(view, true);
+        customView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+            }
+        });
+        listener.onFocusChange(view, false);
     }
 
     @After

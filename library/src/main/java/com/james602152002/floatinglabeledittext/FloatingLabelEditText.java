@@ -452,10 +452,15 @@ public class FloatingLabelEditText extends AppCompatEditText {
                 startErrorAnimation();
             }
         } else {
-            if (errorAnimator != null) {
-                errorAnimator.cancel();
-                errorAnimator = null;
-            }
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    if (errorAnimator != null) {
+                        errorAnimator.cancel();
+                        errorAnimator = null;
+                    }
+                }
+            });
         }
         invalidate();
     }
