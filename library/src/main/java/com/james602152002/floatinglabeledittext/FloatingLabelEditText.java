@@ -23,6 +23,11 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 
+import com.james602152002.floatinglabeledittext.validator.RegexValidator;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by shiki60215 on 18-1-17.
  */
@@ -61,6 +66,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private OnFocusChangeListener mListener;
     private OnFocusChangeListener customizeListener;
     private boolean hasFocus = false;
+    private List<RegexValidator> validatorList;
 
     public FloatingLabelEditText(Context context) {
         super(context);
@@ -519,5 +525,26 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public void setDivider_color(int divider_color) {
         this.divider_color = divider_color;
+    }
+
+    public void setValidatorList(List<RegexValidator> list) {
+        if (list != null) {
+            if (validatorList == null)
+                validatorList = new ArrayList<>();
+            else
+                validatorList.clear();
+            validatorList.addAll(list);
+        }
+    }
+
+    public List<RegexValidator> getValidatorList() {
+        return validatorList;
+    }
+
+    public void addValidator(RegexValidator validator) {
+        if (validatorList == null)
+            validatorList = new ArrayList<>();
+        if (validator != null)
+            validatorList.add(validator);
     }
 }

@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.test.AndroidTestCase;
 import android.view.View;
 
+import com.james602152002.floatinglabeledittext.validator.RegexValidator;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +14,8 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by shiki60215 on 18-1-17.
@@ -199,6 +203,24 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
             }
         });
         listener.onFocusChange(view, false);
+    }
+
+    @Test
+    public void testValidatorList() {
+        customView.setValidatorList(null);
+        assertNull(customView.getValidatorList());
+        final List<RegexValidator> data = new ArrayList<>();
+        customView.setValidatorList(data);
+        customView.setValidatorList(data);
+        assertEquals(customView.getValidatorList(), data);
+    }
+
+    @Test
+    public void testAddValidator() {
+        customView.addValidator(null);
+        RegexValidator regexValidator = new RegexValidator("msg", "regex");
+        customView.addValidator(regexValidator);
+        assertEquals(customView.getValidatorList().get(0), regexValidator);
     }
 
     @After
