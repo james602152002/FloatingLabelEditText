@@ -14,6 +14,7 @@ public class RegexValidator {
     private String error_message;
 
     public RegexValidator(@NonNull String error_message, @NonNull String regex) {
+        this.error_message = error_message;
         pattern = Pattern.compile(regex);
     }
 

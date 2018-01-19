@@ -210,9 +210,15 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         customView.setValidatorList(null);
         assertNull(customView.getValidatorList());
         final List<RegexValidator> data = new ArrayList<>();
+        data.add(null);
         customView.setValidatorList(data);
+        customView.setText("1");
+        data.clear();
+        data.add(new RegexValidator("error", "\\d+"));
         customView.setValidatorList(data);
         assertEquals(customView.getValidatorList(), data);
+        customView.setText("123");
+        customView.setText("abc");
     }
 
     @Test

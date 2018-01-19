@@ -12,9 +12,11 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
@@ -167,6 +169,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         setIncludeFontPadding(false);
         initFocusChangeListener();
         setSingleLine();
+        initTextWatcher();
     }
 
     private void initFocusChangeListener() {
@@ -214,6 +217,36 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (customizeListener != null)
             return customizeListener;
         return super.getOnFocusChangeListener();
+    }
+
+    private void initTextWatcher() {
+        addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (validatorList != null) {
+                    for (RegexValidator regex : validatorList) {
+                        if (regex != null) {
+                            String error_msg = regex.getError_message(s);
+                            if (error_msg != null) {
+                                error = error_msg;
+                                break;
+                            }
+                        }
+                    }
+                }
+                invalidate();
+            }
+        });
     }
 
     private int dp2px(float dpValue) {
