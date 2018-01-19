@@ -53,7 +53,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private int error_color;
     private CharSequence label;
     private short padding_left, padding_top, padding_right, padding_bottom;
-    private short hint_cell_height = -1;
+    private short text_part_height = -1;
+    private boolean text_part_height_set = false;
 
     private float label_text_size;
     private float hint_text_size;
@@ -107,7 +108,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         label_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_horizontal_margin, 0);
         label_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_label_vertical_margin, 0);
         error_horizontal_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_error_horizontal_margin, 0);
-        divider_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_divider_vertical_margin, dp2px(3));
+        divider_vertical_margin = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_divider_vertical_margin, 0);
         highlight_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorHighlight, primary_color);
         setDivider_color(typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorDivider, Color.GRAY));
         error_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_colorError, Color.RED);
@@ -130,7 +131,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             setTextSize(hint_text_size);
         }
         labelPaint.setTextSize(hint_text_size);
-        hint_cell_height = (short) Math.round(hint_text_size);
+        text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
         textTypedArray.recycle();
         textTypedArray = null;
 
@@ -294,7 +295,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (label != null)
             drawSpannableString(canvas, label, labelPaint, label_horizontal_margin, label_paint_dy);
 
-        final int divider_y = (int) (padding_top + label_text_size + hint_cell_height + divider_vertical_margin);
+        final int divider_y = (int) (padding_top + label_text_size + text_part_height + divider_vertical_margin);
         if (!is_error) {
             dividerPaint.setColor(hasFocus ? highlight_color : divider_color);
         } else {
@@ -510,15 +511,14 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void startErrorAnimation() {
-        if (errorAnimator != null) {
-            post(new Runnable() {
-                @Override
-                public void run() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                if (errorAnimator != null)
                     errorAnimator.cancel();
-                    errorAnimator = null;
-                }
-            });
-        }
+                errorAnimator = null;
+            }
+        });
         final float error_length = errorPaint.measureText(error.toString());
         int w = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
@@ -552,8 +552,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     @Override
     public void setTextSize(float size) {
-        label_text_size = size;
-        hint_cell_height = (short) Math.round(label_text_size);
+        hint_text_size = size;
+        if (!text_part_height_set)
+            text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
         super.setTextSize(size);
     }
 
@@ -562,8 +563,18 @@ public class FloatingLabelEditText extends AppCompatEditText {
         Context c = getContext();
         Resources r = c.getResources();
         hint_text_size = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
-        hint_cell_height = (short) Math.round(hint_text_size);
+        if (!text_part_height_set)
+            text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
         super.setTextSize(unit, size);
+    }
+
+    public void setText_part_height(int text_part_height) {
+        text_part_height_set = true;
+        this.text_part_height = (short) text_part_height;
+    }
+
+    public int getText_part_height() {
+        return text_part_height;
     }
 
     public int getDivider_color() {
