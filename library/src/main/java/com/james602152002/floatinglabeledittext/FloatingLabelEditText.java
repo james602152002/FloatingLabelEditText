@@ -246,7 +246,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                         }
                     }
                 }
-                if (error) {
+                if (!error) {
                     setError(null);
                 }
             }
@@ -538,7 +538,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
             post(new Runnable() {
                 @Override
                 public void run() {
-                    errorAnimator.start();
+                    if (errorAnimator != null)
+                        errorAnimator.start();
                 }
             });
         }
