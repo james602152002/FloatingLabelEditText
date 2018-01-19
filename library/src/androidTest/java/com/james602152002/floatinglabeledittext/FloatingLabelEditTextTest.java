@@ -219,7 +219,6 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         customView.setValidatorList(data);
         assertEquals(customView.getValidatorList(), data);
         customView.setText("123");
-//        customView.setText("abc");
     }
 
     @VisibleForTesting
