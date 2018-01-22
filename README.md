@@ -46,13 +46,13 @@
  
  ```
  dependencies {
- 	compile 'com.github.james602152002:FloatingLabelSpinner:1.0.0'
+ 	compile 'com.github.james602152002:FloatingLabelEditText:1.0.0'
  }
  ```
  
  ## 属性
  ```xml
- <com.james602152002.floatinglabelspinner.FloatingLabelEditText
+ <com.james602152002.floatinglabeledittext.FloatingLabelEditText
            //highlight color
            app:j_fle_colorHighlight="#0000FF" 
            //divider color
