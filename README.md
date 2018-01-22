@@ -21,6 +21,16 @@
  - 浮动文字显示字数过多以ellipsize展示
  - 浮动文字支持ForegroundColorSpan
  
+ ## Demo
+  - [下载 APK-Demo](art/demo.apk)
+  - [示例网址](https://github.com/james602152002/FloatingLabelEditTextDemo)
+ 
+ ## 项目演示
+ 
+ |错误/浮动效果|跑马灯效果|
+ |:---:|:---:|
+ |![](art/error_demo.gif)|![](art/text_slide_demo.gif)|
+ 
  ## 依赖:
  
  ```
