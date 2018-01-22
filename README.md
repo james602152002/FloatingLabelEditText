@@ -6,13 +6,13 @@
 [![Build Status](https://travis-ci.org/james602152002/FloatingLabelEditText.svg?branch=master)](https://travis-ci.org/james602152002/FloatingLabelEditText)
 [![codecov](https://codecov.io/gh/james602152002/FloatingLabelEditText/branch/master/graph/badge.svg)](https://codecov.io/gh/james602152002/FloatingLabelEditText)
 
-## English | [中文](../README.md)
+## [English](common_md/README_EN.md) | 中文
 
-A floating label edit text support .ttf to set your left and right icon.
+一般浮动字体文本设置自定义图标仅支持png格式，不支持Icon Font形式，也无法设置图标大小。效果与TextInputLayout相比略差一截，故开发此控件。
 
 ## Feature:
 
- - Set text size by code. (Include floating label, hint text, and error text)
+ - 支持代码更改字体大小(包含浮动文字、提示文字、错误文字)
  - 支持代码设置提示、分割线以及错误状态下的颜色 
  - 支持ttf设置EditText左侧图标
  - 错误文字的字数太多会以跑马灯动画展示
