@@ -284,6 +284,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         final float current_text_size = hint_text_size + (label_text_size - hint_text_size) * float_label_anim_percentage;
         labelPaint.setTextSize(current_text_size);
 
+        final int scrollX = getScrollX();
         if (getText().length() > 0) {
             labelPaint.setAlpha((int) (255 * float_label_anim_percentage));
         } else {
@@ -293,7 +294,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         final int label_paint_dy = (int) (padding_top + label_text_size + current_text_size * (1 - float_label_anim_percentage) * .93f);
 
         if (label != null)
-            drawSpannableString(canvas, label, labelPaint, label_horizontal_margin, label_paint_dy);
+            drawSpannableString(canvas, label, labelPaint, scrollX + label_horizontal_margin, label_paint_dy);
 
         final int divider_y = (int) (padding_top + label_text_size + text_part_height + divider_vertical_margin);
         if (!is_error) {
@@ -304,7 +305,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             final float error_text_width = errorPaint.measureText(error.toString());
             final int hint_repeat_space_width = getWidth() / 3;
             final float max_dx = hint_repeat_space_width + error_text_width;
-            final int start_x = error_horizontal_margin - (int) (max_dx * error_percentage);
+            final int start_x = error_horizontal_margin - (int) (max_dx * error_percentage) + scrollX;
             errorPaint.setColor(error_color);
             if (errorAnimator != null) {
                 if (error_horizontal_margin > 0 && errorPaint.getShader() == null) {
@@ -322,7 +323,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                 drawSpannableString(canvas, error, errorPaint, (int) (start_x + max_dx), error_paint_dy);
             }
         }
-        canvas.drawLine(0, divider_y, getWidth(), divider_y, dividerPaint);
+        canvas.drawLine(scrollX, divider_y, getWidth() + scrollX, divider_y, dividerPaint);
     }
 
     private void drawSpannableString(final Canvas canvas, CharSequence hint, final TextPaint paint, final int start_x, final int start_y) {
@@ -511,19 +512,20 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void startErrorAnimation() {
-        post(new Runnable() {
-            @Override
-            public void run() {
-                if (errorAnimator != null)
+        if (errorAnimator != null) {
+            post(new Runnable() {
+                @Override
+                public void run() {
                     errorAnimator.cancel();
-                errorAnimator = null;
-            }
-        });
+                    errorAnimator = null;
+                }
+            });
+        }
         final float error_length = errorPaint.measureText(error.toString());
         int w = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         measure(w, h);
-        final int width = getMeasuredWidth();
+        final int width = getWidth() > 0 ? getWidth() : getMeasuredWidth();
         if (error_length > width) {
             error_percentage = 0;
             if (errorAnimator == null)
