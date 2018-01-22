@@ -1,6 +1,6 @@
 # Developing...
 
-# Android浮动字文本-FloatingLabelEditText
+# Android浮动字体文本-FloatingLabelEditText
 
 [![License](https://img.shields.io/badge/License%20-Apache%202-337ab7.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![MinSDK](https://img.shields.io/badge/API-14%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=14)
@@ -130,6 +130,15 @@
  |微信|支付宝|
  |:---:|:---:|
  |![](art/weixin_green.jpg)|![](art/zhifubao_blue.jpg)|
+ 
+ ## 建议
+ 
+ ```
+ 提示文字不得超过控件宽度，
+ 传统文本编辑框使用TextView作为标题占用太多版面，
+ 使用浮动字体文本可省下不少控件。
+ 提示文字应简洁有力，以实现半扁平设计。
+ ```
  
  License
  -------
