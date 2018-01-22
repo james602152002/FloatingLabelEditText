@@ -53,11 +53,11 @@
  ## 属性
  ```xml
  <com.james602152002.floatinglabeledittext.FloatingLabelEditText
-           //highlight color
+           //设置获取焦点状态下的颜色
            app:j_fle_colorHighlight="#0000FF" 
-           //divider color
+           //设置分割线未获取状态下的颜色
            app:j_fle_colorDivider="#FF00FF"
-           //error color
+           //设置错误状态下的颜色
            app:j_fle_colorError="#0000FF"
            //floating label text
            app:j_fle_hint="label"
@@ -81,4 +81,17 @@
            app:j_fle_error_anim_duration="8000"
            />
            
+ ```
+ 
+ ## 方法
+ ```java
+ public void setting(){
+    //设置获取焦点状态下的颜色
+    setHighlightColor(int color);
+    //设置分割线未获取状态下的颜色
+    setDivider_color(int divider_color);
+    //设置错误状态下的颜色
+    setError_color(int error_color);
+ }
+ 
  ```
