@@ -31,6 +31,8 @@
  |:---:|:---:|
  |![](art/error_demo.gif)|![](art/text_slide_demo.gif)|
  
+ [更多效果](common_md/DEMONSTRATION_CH.md)
+ 
  ## 依赖:
  
  ```
