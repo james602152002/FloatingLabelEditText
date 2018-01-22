@@ -64,15 +64,15 @@
            //thickness of divider
            app:j_fle_thickness="2dp"
            //horizontal margin of label
-           app: j_fle_label_horizontal_margin="2dp"
+           app:j_fle_label_horizontal_margin="2dp"
            //vertical margin of label
-           app: j_fle_label_vertical_margin="2dp"
+           app:j_fle_label_vertical_margin="2dp"
            //horizontal margin of error text
-           app: j_fle_error_horizontal_margin="2dp"
+           app:j_fle_error_horizontal_margin="2dp"
            //vertical margin of divider
-           app: j_fle_divider_vertical_margin="2dp"
+           app:j_fle_divider_vertical_margin="2dp"
            //floating label text size
-           app: j_fle_label_textSize="14sp"
+           app:j_fle_label_textSize="14sp"
            //error text size
            app:j_fle_error_textSize="14sp"
            //float animation duration(unit：ms)
