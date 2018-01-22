@@ -59,25 +59,25 @@
            app:j_fle_colorDivider="#FF00FF"
            //设置错误状态下的颜色
            app:j_fle_colorError="#0000FF"
-           //floating label text
+           //设置Label提示文字
            app:j_fle_hint="label"
-           //thickness of divider
+           //设置divider厚度
            app:j_fle_thickness="2dp"
-           //horizontal margin of label
+           //设置label水平间距
            app:j_fle_label_horizontal_margin="2dp"
-           //vertical margin of label
+           //设置label垂直间距
            app:j_fle_label_vertical_margin="2dp"
-           //horizontal margin of error text
+           //设置错误文字水平间距
            app:j_fle_error_horizontal_margin="2dp"
-           //vertical margin of divider
+           //设置错误文字垂直间距
            app:j_fle_divider_vertical_margin="2dp"
-           //floating label text size
+           //设置浮动文字大小
            app:j_fle_label_textSize="14sp"
-           //error text size
+           //设置错误文字大小
            app:j_fle_error_textSize="14sp"
-           //float animation duration(unit：ms)
+           //浮动文字动画时间(单位：毫秒)
            app:j_fle_float_anim_duration="800"
-           //scrolling text animation duration(unit：ms)
+           //错误动画滚动时间(单位：毫秒)
            app:j_fle_error_anim_duration="8000"
            />
            
@@ -92,6 +92,50 @@
     setDivider_color(int divider_color);
     //设置错误状态下的颜色
     setError_color(int error_color);
+    //设置Label提示文字
+    setLabel(CharSequence hint);
+    //设置divider厚度
+    setThickness(int thickness);
+    //设置label水平间距
+    setLabelMargins(int horizontal_margin, int vertical_margin);
+    //设置错误文字水平间距
+    setErrorMargin(int horizontal_margin, int vertical_margin);
+    //设置浮动文字大小
+    setLabel_text_size(float label_text_size);
+    //设置错误文字大小
+    setError_text_size(float error_text_size);
+    //浮动文字动画时间(单位：毫秒)
+    setAnimDuration(int ANIM_DURATION);
+    //错误动画滚动时间(单位：毫秒)
+    setErrorAnimDuration(int ERROR_ANIM_DURATION);
  }
  
  ```
+ ## 混淆
+ 
+ 无需混淆代码。
+ 
+ ## 赞赏
+ 
+ 如果觉得效果写得不错，欢迎赏小弟一口蛋白粉 :)
+ 
+ |微信|支付宝|
+ |:---:|:---:|
+ |![](art/weixin_green.jpg)|![](art/zhifubao_blue.jpg)|
+ 
+ License
+ -------
+ 
+     Copyright 2017 james602152002
+ 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+ 
+        http://www.apache.org/licenses/LICENSE-2.0
+ 
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
