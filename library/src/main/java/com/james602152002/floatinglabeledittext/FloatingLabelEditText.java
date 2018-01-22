@@ -269,7 +269,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         this.padding_right = (short) right;
         this.padding_bottom = (short) bottom;
         super.setPadding(left, top + label_vertical_margin + (int) label_text_size, right,
-                bottom + divider_stroke_width + (int) error_text_size + (divider_vertical_margin * 3));
+                bottom + divider_stroke_width + (int) (error_text_size *  1.2f) + (divider_vertical_margin * 3));
     }
 
     private void updatePadding() {
