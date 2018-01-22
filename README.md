@@ -49,3 +49,36 @@
  	compile 'com.github.james602152002:FloatingLabelSpinner:1.0.0'
  }
  ```
+ 
+ ## 属性
+ ```xml
+ <com.james602152002.floatinglabelspinner.FloatingLabelEditText
+           //highlight color
+           app:j_fle_colorHighlight="#0000FF" 
+           //divider color
+           app:j_fle_colorDivider="#FF00FF"
+           //error color
+           app:j_fle_colorError="#0000FF"
+           //floating label text
+           app:j_fle_hint="label"
+           //thickness of divider
+           app:j_fle_thickness="2dp"
+           //horizontal margin of label
+           app: j_fle_label_horizontal_margin="2dp"
+           //vertical margin of label
+           app: j_fle_label_vertical_margin="2dp"
+           //horizontal margin of error text
+           app: j_fle_error_horizontal_margin="2dp"
+           //vertical margin of divider
+           app: j_fle_divider_vertical_margin="2dp"
+           //floating label text size
+           app: j_fle_label_textSize="14sp"
+           //error text size
+           app:j_fle_error_textSize="14sp"
+           //float animation duration(unit：ms)
+           app:j_fle_float_anim_duration="800"
+           //scrolling text animation duration(unit：ms)
+           app:j_fle_error_anim_duration="8000"
+           />
+           
+ ```
