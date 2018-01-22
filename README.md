@@ -79,6 +79,8 @@
            app:j_fle_float_anim_duration="800"
            //错误动画滚动时间(单位：毫秒)
            app:j_fle_error_anim_duration="8000"
+           //错误模式关闭(默认打开)
+           app:j_fle_error_disable="true"
            />
            
  ```
@@ -99,7 +101,9 @@
     //设置label水平间距
     setLabelMargins(int horizontal_margin, int vertical_margin);
     //设置错误文字水平间距
-    setErrorMargin(int horizontal_margin, int vertical_margin);
+    setErrorMargin(int horizontal_margin);
+    //设置分割线间距(单位：毫秒)
+    setDivider_vertical_margin(int divider_vertical_margin);
     //设置浮动文字大小
     setLabel_text_size(float label_text_size);
     //设置错误文字大小
@@ -108,6 +112,10 @@
     setAnimDuration(int ANIM_DURATION);
     //错误动画滚动时间(单位：毫秒)
     setErrorAnimDuration(int ERROR_ANIM_DURATION);
+    //开启错误模式
+    setError_enabled();
+    //关闭错误模式
+    setError_disabled();
  }
  
  ```

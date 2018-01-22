@@ -71,7 +71,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         customView.dispatchDraw(canvas);
         customView.setError("error.............................................................");
         customView.dispatchDraw(canvas);
-        customView.setErrorMargin(10, 0);
+        customView.setErrorMargin(10);
         customView.dispatchDraw(canvas);
     }
 
@@ -115,7 +115,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     @Test
     public void testMargins() {
         customView.setLabelMargins(10, 10);
-        customView.setErrorMargin(10, 10);
+        customView.setErrorMargin(10);
     }
 
     @Test
@@ -244,6 +244,18 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         assertEquals(customView.getText_part_height(), height);
         customView.setTextSize(0, 0);
         customView.setTextSize(0);
+    }
+
+    @Test
+    public void testErrorDisabled() {
+        customView.setError_disabled();
+        assertTrue(customView.isError_disabled());
+    }
+
+    @Test
+    public void testErrorEnabled() {
+        customView.setError_enabled();
+        assertFalse(customView.isError_disabled());
     }
 
     @After

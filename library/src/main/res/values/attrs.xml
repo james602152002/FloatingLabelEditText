@@ -14,5 +14,6 @@
         <attr name="j_fle_error_textSize" format="dimension" />
         <attr name="j_fle_float_anim_duration" format="integer" />
         <attr name="j_fle_error_anim_duration" format="integer" />
+        <attr name="j_fle_error_disable" format="boolean"/>
     </declare-styleable>
 </resources>
