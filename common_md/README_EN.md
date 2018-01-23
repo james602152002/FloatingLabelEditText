@@ -10,7 +10,7 @@
 
 A floating label edit text support .ttf to set your left and right icon.
 
-## 特点功能:
+## Feature:
 
  - Set text size by code. (Include floating label, hint text, and error text)
  - Set color of hint, divider and error status by code.
