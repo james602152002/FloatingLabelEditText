@@ -302,7 +302,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (label != null)
             drawSpannableString(canvas, label, labelPaint, scrollX + label_horizontal_margin, label_paint_dy);
 
-        final int divider_y = (int) (padding_top + label_text_size + text_part_height + (divider_stroke_width >> 1) + divider_vertical_margin);
+        final int divider_y = (int) (padding_top + label_text_size + text_part_height * getLineCount() + (divider_stroke_width >> 1) + divider_vertical_margin);
         if (!is_error) {
             dividerPaint.setColor(hasFocus ? highlight_color : divider_color);
         } else {
