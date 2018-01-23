@@ -134,15 +134,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
             setTextSize(hint_text_size);
         }
         labelPaint.setTextSize(hint_text_size);
-        text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
+        text_part_height = (short) Math.round(hint_text_size);
         textTypedArray.recycle();
         textTypedArray = null;
 
         TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint});
         if (TextUtils.isEmpty(label))
             label = hintTypedArray.getString(0);
-        else
-            setHint(label);
         hint_text_color = getCurrentHintTextColor();
         setHintTextColor(0);
         hintTypedArray.recycle();
@@ -275,7 +273,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         this.padding_right = (short) right;
         this.padding_bottom = (short) bottom;
         super.setPadding(left, top + label_vertical_margin + (int) label_text_size, right,
-                bottom + divider_stroke_width + divider_vertical_margin + (!error_disabled ? (int) (error_text_size * 1.2f) + (divider_vertical_margin << 1) : 0));
+                bottom + divider_stroke_width + (!error_disabled ? (int) (error_text_size * 1.2f) + (divider_vertical_margin << 1) : 0));
     }
 
     private void updatePadding() {
@@ -302,7 +300,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (label != null)
             drawSpannableString(canvas, label, labelPaint, scrollX + label_horizontal_margin, label_paint_dy);
 
-        final int divider_y = (int) (padding_top + label_text_size + text_part_height + divider_vertical_margin);
+        final int divider_y = (int) (padding_top + label_text_size + text_part_height + divider_vertical_margin + divider_stroke_width);
         if (!is_error) {
             dividerPaint.setColor(hasFocus ? highlight_color : divider_color);
         } else {
@@ -439,6 +437,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public void setLabel(CharSequence hint) {
         this.label = hint;
+        setHint(label);
         invalidate();
     }
 
@@ -494,9 +493,6 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     public void setError(CharSequence error) {
-        if (error_disabled) {
-            return;
-        }
         this.is_error = !TextUtils.isEmpty(error);
         this.error = error;
         if (is_error) {
@@ -564,7 +560,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     public void setTextSize(float size) {
         hint_text_size = size;
         if (!text_part_height_set)
-            text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
+            text_part_height = (short) Math.round(hint_text_size);
         super.setTextSize(size);
     }
 
@@ -574,7 +570,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         Resources r = c.getResources();
         hint_text_size = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
         if (!text_part_height_set)
-            text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
+            text_part_height = (short) Math.round(hint_text_size);
         super.setTextSize(unit, size);
     }
 
