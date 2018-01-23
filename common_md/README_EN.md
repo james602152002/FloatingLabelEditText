@@ -20,16 +20,16 @@ A floating label edit text support .ttf to set your left and right icon.
  - You can set floating label text by ForegroundColorSpan.
  
 ## Demo
- - [Download APK-Demo](art/demo.apk)
+ - [Download APK-Demo](../art/demo.apk)
  - [Sample Code Reference](https://github.com/james602152002/FloatingLabelEditTextDemo)
  
 ## Demonstration
  
  |Error/Float|Sliding Text|
  |:---:|:---:|
- |![](art/error_demo.gif)|![](art/text_slide_demo.gif)|
+ |![](art/error_demo.gif)|![](../art/text_slide_demo.gif)|
  
- [More Demonstration](common_md/DEMONSTRATION_EN.md)
+ [More Demonstration](../common_md/DEMONSTRATION_EN.md)
  
 ## Dependency:
  
@@ -127,7 +127,7 @@ A floating label edit text support .ttf to set your left and right icon.
  
  |WeChat|AliPay|
  |:---:|:---:|
- |![](art/weixin_green.jpg)|![](art/zhifubao_blue.jpg)|
+ |![](../art/weixin_green.jpg)|![](../art/zhifubao_blue.jpg)|
  
  ## Suggestion
  
