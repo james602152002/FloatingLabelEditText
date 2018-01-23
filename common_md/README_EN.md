@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/james602152002/FloatingLabelEditText.svg?branch=master)](https://travis-ci.org/james602152002/FloatingLabelEditText)
 [![codecov](https://codecov.io/gh/james602152002/FloatingLabelEditText/branch/master/graph/badge.svg)](https://codecov.io/gh/james602152002/FloatingLabelEditText)
 
-## English | [中文](../README.md)
+## English | [中文](../)
 
 A floating label edit text support .ttf to set your left and right icon.
 
