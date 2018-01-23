@@ -83,7 +83,7 @@ A floating label edit text support .ttf to set your left and right icon.
            
  ```
  
- ## 方法
+ ## Method
  ```java
  public void setting(){
     //set focus status color
