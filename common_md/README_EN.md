@@ -29,7 +29,7 @@ A floating label edit text support .ttf to set your left and right icon.
  |:---:|:---:|
  |![](art/error_demo.gif)|![](art/text_slide_demo.gif)|
  
- [More Demonstration](common_md/DEMONSTRATION_CH.md)
+ [More Demonstration](common_md/DEMONSTRATION_EN.md)
  
 ## Dependency:
  
