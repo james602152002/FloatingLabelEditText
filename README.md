@@ -53,7 +53,7 @@
  <com.james602152002.floatinglabeledittext.FloatingLabelEditText
            //设置获取焦点状态下的颜色
            app:j_fle_colorHighlight="#0000FF" 
-           //设置分割线未获取状态下的颜色
+           //设置分割线未获取焦点状态下的颜色
            app:j_fle_colorDivider="#FF00FF"
            //设置错误状态下的颜色
            app:j_fle_colorError="#0000FF"
@@ -67,7 +67,7 @@
            app:j_fle_label_vertical_margin="2dp"
            //设置错误文字水平间距
            app:j_fle_error_horizontal_margin="2dp"
-           //设置错误文字垂直间距
+           //设置分割线垂直间距
            app:j_fle_divider_vertical_margin="2dp"
            //设置浮动文字大小
            app:j_fle_label_textSize="14sp"

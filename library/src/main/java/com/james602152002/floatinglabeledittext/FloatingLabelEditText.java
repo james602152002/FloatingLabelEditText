@@ -141,6 +141,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint});
         if (TextUtils.isEmpty(label))
             label = hintTypedArray.getString(0);
+        else
+            setHint(label);
         hint_text_color = getCurrentHintTextColor();
         setHintTextColor(0);
         hintTypedArray.recycle();

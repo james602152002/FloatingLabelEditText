@@ -13,25 +13,25 @@ A floating label edit text support .ttf to set your left and right icon.
 ## 特点功能:
 
  - Set text size by code. (Include floating label, hint text, and error text)
- - 支持代码设置提示、分割线以及错误状态下的颜色 
- - 支持ttf设置EditText左侧图标
- - 错误文字的字数太多会以跑马灯动画展示
- - 浮动文字显示字数过多以ellipsize展示
- - 浮动文字支持ForegroundColorSpan
+ - Set color of hint, divider and error status by code.
+ - Support set left drawable by ttf.
+ - Support sliding text when error text length too long.
+ - Ellipsize when floating label text length too long.
+ - You can set floating label text by ForegroundColorSpan.
  
 ## Demo
- - [下载 APK-Demo](art/demo.apk)
- - [示例网址](https://github.com/james602152002/FloatingLabelEditTextDemo)
+ - [Download APK-Demo](art/demo.apk)
+ - [Sample Code Reference](https://github.com/james602152002/FloatingLabelEditTextDemo)
  
-## 项目演示
+## Demonstration
  
- |错误/浮动效果|跑马灯效果|
+ |Error/Float|Sliding Text|
  |:---:|:---:|
  |![](art/error_demo.gif)|![](art/text_slide_demo.gif)|
  
- [更多效果](common_md/DEMONSTRATION_CH.md)
+ [More Demonstration](common_md/DEMONSTRATION_CH.md)
  
-## 依赖:
+## Dependency:
  
  ```
  allprojects {
@@ -48,36 +48,36 @@ A floating label edit text support .ttf to set your left and right icon.
  }
  ```
  
- ## 属性
+ ## Property
  ```xml
  <com.james602152002.floatinglabeledittext.FloatingLabelEditText
-           //设置获取焦点状态下的颜色
+           //set focus status color
            app:j_fle_colorHighlight="#0000FF" 
-           //设置分割线未获取状态下的颜色
+           //set divider color when you are not in focus status
            app:j_fle_colorDivider="#FF00FF"
-           //设置错误状态下的颜色
+           //set error status color
            app:j_fle_colorError="#0000FF"
-           //设置Label提示文字
+           //set label text and hint
            app:j_fle_hint="label"
-           //设置divider厚度
+           //set thickness of divider
            app:j_fle_thickness="2dp"
-           //设置label水平间距
+           //set label horizontal margin
            app:j_fle_label_horizontal_margin="2dp"
-           //设置label垂直间距
+           //set label vertical margin
            app:j_fle_label_vertical_margin="2dp"
-           //设置错误文字水平间距
+           //ser error text horizontal margin
            app:j_fle_error_horizontal_margin="2dp"
-           //设置错误文字垂直间距
+           //set divider vertical margin
            app:j_fle_divider_vertical_margin="2dp"
-           //设置浮动文字大小
+           //set floating label text size
            app:j_fle_label_textSize="14sp"
-           //设置错误文字大小
+           //set error text size
            app:j_fle_error_textSize="14sp"
-           //浮动文字动画时间(单位：毫秒)
+           //set floating label animation duration(unit：ms)
            app:j_fle_float_anim_duration="800"
-           //错误动画滚动时间(单位：毫秒)
+           //set error sliding text animation duration(unit：ms)
            app:j_fle_error_anim_duration="8000"
-           //错误模式关闭(默认打开)
+           //validate error mode disable(default enabled)
            app:j_fle_error_disable="true"
            />
            
@@ -86,56 +86,55 @@ A floating label edit text support .ttf to set your left and right icon.
  ## 方法
  ```java
  public void setting(){
-    //设置获取焦点状态下的颜色
+    //set focus status color
     setHighlightColor(int color);
-    //设置分割线未获取状态下的颜色
+    //set divider color when you are not in focus status
     setDivider_color(int divider_color);
-    //设置错误状态下的颜色
+    //set error status color
     setError_color(int error_color);
-    //设置Label提示文字
+    //set label text and hint
     setLabel(CharSequence hint);
-    //设置divider厚度
+    //set thickness of divider
     setThickness(int thickness);
-    //设置label水平间距
+    //set label horizontal and vertical margin
     setLabelMargins(int horizontal_margin, int vertical_margin);
-    //设置错误文字水平间距
+    //ser error text horizontal margin
     setErrorMargin(int horizontal_margin);
-    //设置分割线间距(单位：毫秒)
+    //set divider vertical margin
     setDivider_vertical_margin(int divider_vertical_margin);
-    //设置浮动文字大小
+    //set floating label text size
     setLabel_text_size(float label_text_size);
-    //设置错误文字大小
+    //set error text size
     setError_text_size(float error_text_size);
-    //浮动文字动画时间(单位：毫秒)
+    //set floating label animation duration(unit：ms)
     setAnimDuration(int ANIM_DURATION);
-    //错误动画滚动时间(单位：毫秒)
+    //set error sliding text animation duration(unit：ms)
     setErrorAnimDuration(int ERROR_ANIM_DURATION);
-    //开启错误模式
+    //enable error mode
     setError_enabled();
-    //关闭错误模式
+    //disable error mode
     setError_disabled();
  }
  
  ```
- ## 混淆
+ ## Proguard
  
- 无需混淆代码。
+ You don't need use proguard at all.
  
- ## 赞赏
+ ## Donate
  
- 如果觉得效果写得不错，欢迎赏小弟一口蛋白粉 :)
+ If you like this widget, you could praise me some protein powder below lol
  
- |微信|支付宝|
+ |WeChat|AliPay|
  |:---:|:---:|
  |![](art/weixin_green.jpg)|![](art/zhifubao_blue.jpg)|
  
- ## 建议
+ ## Suggestion
  
  ```
- 提示文字不得超过控件宽度，
- 传统文本编辑框使用TextView作为标题配合EditText占用太多版面，
- 使用浮动字体文本配合简短的提示文字，
- 可实现半扁平设计。
+ Floating label text length not allow longer than widget width.
+ User need clear UI to know your widget's title and format, 
+ so you need to abbreviate your label text.
  ```
  
  License
