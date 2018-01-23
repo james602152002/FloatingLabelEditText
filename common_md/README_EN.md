@@ -27,7 +27,7 @@ A floating label edit text support .ttf to set your left and right icon.
  
  |Error/Float|Sliding Text|
  |:---:|:---:|
- |![](art/error_demo.gif)|![](../art/text_slide_demo.gif)|
+ |![](../art/error_demo.gif)|![](../art/text_slide_demo.gif)|
  
  [More Demonstration](../common_md/DEMONSTRATION_EN.md)
  
