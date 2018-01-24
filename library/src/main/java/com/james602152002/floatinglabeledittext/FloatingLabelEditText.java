@@ -9,10 +9,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -71,6 +74,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private boolean hasFocus = false;
     private List<RegexValidator> validatorList;
     private boolean error_disabled = false;
+
+    private TextPaint leftIconFontPaint;
+    private String leftIconUnitCode;
+    private int leftIconFontColor;
 
     public FloatingLabelEditText(Context context) {
         super(context);
@@ -330,6 +337,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             }
         }
         canvas.drawLine(scrollX, divider_y, getWidth() + scrollX, divider_y, dividerPaint);
+        drawLeftIconFont(canvas);
     }
 
     private void drawSpannableString(final Canvas canvas, CharSequence hint, final TextPaint paint, final int start_x, final int start_y) {
@@ -375,7 +383,17 @@ public class FloatingLabelEditText extends AppCompatEditText {
         } else {
             canvas.drawText(hint, 0, hint.length(), xStart, start_y, paint);
         }
+    }
 
+    private void drawLeftIconFont(final Canvas canvas) {
+        if (leftIconFontPaint != null) {
+            leftIconFontPaint.setColor(leftIconFontColor);
+            leftIconFontPaint.setAlpha((int) (255 * float_label_anim_percentage));
+            String spanned = Html.fromHtml(leftIconUnitCode).toString();
+            Rect bounds = new Rect();
+            leftIconFontPaint.getTextBounds(spanned, 0, spanned.length(), bounds);
+            canvas.drawText(spanned, 0, padding_top + label_text_size + ((bounds.height() + text_part_height + divider_vertical_margin) >> 1), leftIconFontPaint);
+        }
     }
 
     final private void setFloat_label_anim_percentage(float float_label_anim_percentage) {
@@ -628,5 +646,17 @@ public class FloatingLabelEditText extends AppCompatEditText {
     public void setError_enabled() {
         this.error_disabled = false;
         updatePadding();
+    }
+
+    public void setLeftIconFont(Typeface typeface, String unit_code, int color) {
+        if (leftIconFontPaint == null) {
+            leftIconFontPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        }
+        leftIconFontPaint.setTextSize(dp2px(10));
+        Typeface tf = Typeface.createFromAsset(getResources().getAssets(), "floating_label_edit_text_iconfont.ttf");
+        leftIconFontPaint.setTypeface(tf);
+        leftIconFontPaint.setColor(color);
+        this.leftIconUnitCode = unit_code;
+        this.leftIconFontColor = color;
     }
 }
