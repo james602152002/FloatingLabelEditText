@@ -14,7 +14,10 @@
         <attr name="j_fle_error_textSize" format="dimension" />
         <attr name="j_fle_float_anim_duration" format="integer" />
         <attr name="j_fle_error_anim_duration" format="integer" />
-        <attr name="j_fle_error_disable" format="boolean"/>
-        <attr name="j_fle_multiline_mode_enable" format = "boolean"/>
+        <attr name="j_fle_error_disable" format="boolean" />
+        <attr name="j_fle_multiline_mode_enable" format="boolean" />
+        <attr name="j_fle_enable_clear_btn" format="boolean" />
+        <attr name="j_fle_clear_btn_size" format="dimension" />
+        <attr name="j_fle_clear_btn_color" format="color" />
     </declare-styleable>
 </resources>

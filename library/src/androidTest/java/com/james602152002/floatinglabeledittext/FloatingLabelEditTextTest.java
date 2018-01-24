@@ -250,6 +250,17 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     }
 
     @Test
+    public void testEnableClearBtn() throws NoSuchFieldException, IllegalAccessException {
+        Field field = FloatingLabelEditText.class.getDeclaredField("clearButtonPaint");
+        field.setAccessible(true);
+        customView.enableClearBtn(true);
+        assertNotNull(field.get(customView));
+        customView.enableClearBtn(true);
+        customView.enableClearBtn(false);
+        assertNull(field.get(customView));
+    }
+
+    @Test
     public void testSingleLine() throws IllegalAccessException, NoSuchFieldException {
         customView.setSingleLine();
         customView.setMultiline_mode(true);
