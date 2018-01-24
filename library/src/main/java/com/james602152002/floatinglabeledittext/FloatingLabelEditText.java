@@ -77,6 +77,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private TextPaint leftIconFontPaint;
     private String leftIconUnitCode;
     private int leftIconFontColor;
+    private boolean multiline_mode = false;
 
     public FloatingLabelEditText(Context context) {
         super(context);
@@ -128,6 +129,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         ANIM_DURATION = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_float_anim_duration, 800);
         ERROR_ANIM_DURATION_PER_WIDTH = (short) typedArray.getInteger(R.styleable.FloatingLabelEditText_j_fle_error_anim_duration, 8000);
         error_disabled = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_error_disable, false);
+        multiline_mode = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_multiline_mode_enable, false);
 
         if (ANIM_DURATION < 0)
             ANIM_DURATION = 800;
@@ -646,5 +648,17 @@ public class FloatingLabelEditText extends AppCompatEditText {
         leftIconFontPaint.setColor(color);
         this.leftIconUnitCode = unit_code;
         this.leftIconFontColor = color;
+    }
+
+    @Override
+    public void setSingleLine() {
+        if (multiline_mode)
+            return;
+        super.setSingleLine();
+    }
+
+    public final void setMultiline_mode(boolean enable) {
+        this.multiline_mode = enable;
+        setSingleLine(!enable);
     }
 }

@@ -249,6 +249,17 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         assertFalse(customView.isError_disabled());
     }
 
+    @Test
+    public void testSingleLine() throws IllegalAccessException, NoSuchFieldException {
+        customView.setSingleLine();
+        customView.setMultiline_mode(true);
+        customView.setSingleLine();
+        Field field = FloatingLabelEditText.class.getDeclaredField("multiline_mode");
+        field.setAccessible(true);
+        assertTrue((boolean) field.get(customView));
+        customView.setMultiline_mode(false);
+    }
+
     @After
     public void tearDown() throws Exception {
         customView = null;
