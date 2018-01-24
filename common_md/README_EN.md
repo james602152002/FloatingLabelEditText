@@ -8,13 +8,13 @@
 
 ## English | [中文](https://github.com/james602152002/FloatingLabelEditText)
 
-A floating label edit text support .ttf to set your left and right icon.
+A floating label edit text you can customize your clear button by code or xml.
 
 ## Feature:
 
  - Set text size by code. (Include floating label, hint text, and error text)
  - Set color of hint, divider and error status by code.
- - Support set left drawable by ttf.
+ - Customize your clear button by code.
  - Support sliding text when error text length too long.
  - Ellipsize when floating label text length too long.
  - You can set floating label text by ForegroundColorSpan.
@@ -79,6 +79,8 @@ A floating label edit text support .ttf to set your left and right icon.
            app:j_fle_error_anim_duration="8000"
            //validate error mode disable(default enabled)
            app:j_fle_error_disable="true"
+           //enable multiline mode
+           app:j_fle_multiline_mode_enable="true"
            />
            
  ```

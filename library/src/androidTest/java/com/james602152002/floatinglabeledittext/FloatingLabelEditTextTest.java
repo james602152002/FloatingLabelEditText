@@ -238,15 +238,6 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     }
 
     @Test
-    public void testTextPartHeight() {
-        final int height = 10;
-        customView.setText_part_height(height);
-        assertEquals(customView.getText_part_height(), height);
-        customView.setTextSize(0, 0);
-        customView.setTextSize(0);
-    }
-
-    @Test
     public void testErrorDisabled() {
         customView.setError_disabled();
         assertTrue(customView.isError_disabled());

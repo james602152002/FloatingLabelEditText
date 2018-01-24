@@ -57,7 +57,6 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private CharSequence label;
     private short padding_left, padding_top, padding_right, padding_bottom;
     private short text_part_height = -1;
-    private boolean text_part_height_set = false;
 
     private float label_text_size;
     private float hint_text_size;
@@ -581,8 +580,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     @Override
     public void setTextSize(float size) {
         hint_text_size = size;
-        if (!text_part_height_set)
-            text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
+        text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
         super.setTextSize(size);
     }
 
@@ -591,18 +589,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         Context c = getContext();
         Resources r = c.getResources();
         hint_text_size = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
-        if (!text_part_height_set)
-            text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
+        text_part_height = (short) (Math.round(hint_text_size) * 1.2f);
         super.setTextSize(unit, size);
-    }
-
-    public void setText_part_height(int text_part_height) {
-        text_part_height_set = true;
-        this.text_part_height = (short) text_part_height;
-    }
-
-    public int getText_part_height() {
-        return text_part_height;
     }
 
     public int getDivider_color() {

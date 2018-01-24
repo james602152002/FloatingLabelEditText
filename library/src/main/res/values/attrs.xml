@@ -15,5 +15,6 @@
         <attr name="j_fle_float_anim_duration" format="integer" />
         <attr name="j_fle_error_anim_duration" format="integer" />
         <attr name="j_fle_error_disable" format="boolean"/>
+        <attr name="j_fle_multiline_mode_enable" format = "boolean"/>
     </declare-styleable>
 </resources>

@@ -8,13 +8,13 @@
 
 ## [English](common_md/README_EN.md) | 中文
 
-一般浮动字体文本设置自定义图标仅支持png格式，不支持Icon Font形式，也无法设置图标大小。效果与TextInputLayout相比略差一截，故开发此控件。
+一般浮动字体文本无法自定义清除图标，亦无法支持多行模式，故开发此控件。
 
 ## Feature:
 
  - 支持代码更改字体大小(包含浮动文字、提示文字、错误文字)
  - 支持代码设置提示、分割线以及错误状态下的颜色 
- - 支持ttf设置EditText左侧图标
+ - 支持自定义清除图标
  - 错误文字的字数太多会以跑马灯动画展示
  - 浮动文字显示字数过多以ellipsize展示
  - 浮动文字支持ForegroundColorSpan
@@ -79,6 +79,8 @@
            app:j_fle_error_anim_duration="8000"
            //错误模式关闭(默认打开)
            app:j_fle_error_disable="true"
+           //多行模式打开(默认关闭)
+           app:j_fle_multiline_mode_enable="true"
            />
            
  ```
