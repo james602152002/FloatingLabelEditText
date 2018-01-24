@@ -172,10 +172,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (paddingArray.hasValue(0)) {
             padding_left = padding_top = padding_right = padding_bottom = (short) paddingArray.getDimensionPixelOffset(0, 0);
         } else {
-            padding_left = (short) paddingArray.getDimensionPixelOffset(1, 0);
-            padding_top = (short) paddingArray.getDimensionPixelOffset(2, 0);
-            padding_right = (short) paddingArray.getDimensionPixelOffset(3, 0);
-            padding_bottom = (short) paddingArray.getDimensionPixelOffset(4, 0);
+            padding_left = (short) paddingArray.getDimensionPixelOffset(1, getPaddingLeft());
+            padding_top = (short) paddingArray.getDimensionPixelOffset(2, getPaddingTop());
+            padding_right = (short) paddingArray.getDimensionPixelOffset(3, getPaddingRight());
+            padding_bottom = (short) paddingArray.getDimensionPixelOffset(4, getPaddingBottom());
         }
         paddingArray.recycle();
         paddingArray = null;
@@ -309,7 +309,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (label != null)
             drawSpannableString(canvas, label, labelPaint, scrollX + label_horizontal_margin, label_paint_dy);
 
-        final int divider_y = (int) (padding_top + label_text_size + text_part_height * getLineCount() + (divider_stroke_width >> 1) + divider_vertical_margin);
+        final int divider_y = (int) (padding_top + label_text_size + label_vertical_margin + text_part_height * getLineCount() + (divider_stroke_width >> 1) + divider_vertical_margin);
         if (!is_error) {
             dividerPaint.setColor(hasFocus ? highlight_color : divider_color);
         } else {
@@ -392,7 +392,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             String spanned = Html.fromHtml(leftIconUnitCode).toString();
             Rect bounds = new Rect();
             leftIconFontPaint.getTextBounds(spanned, 0, spanned.length(), bounds);
-            canvas.drawText(spanned, 0, padding_top + label_text_size + ((bounds.height() + text_part_height + divider_vertical_margin) >> 1), leftIconFontPaint);
+            canvas.drawText(spanned, 0, padding_top + label_text_size + ((label_vertical_margin + bounds.height() + text_part_height + divider_vertical_margin) >> 1), leftIconFontPaint);
         }
     }
 
