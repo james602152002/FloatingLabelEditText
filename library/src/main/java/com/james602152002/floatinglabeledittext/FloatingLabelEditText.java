@@ -231,7 +231,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     public void setOnFocusChangeListener(OnFocusChangeListener l) {
         if (mListener == null) {
             mListener = l;
-        } else if (customizeListener == null) {
+        } else {
             customizeListener = l;
         }
         super.setOnFocusChangeListener(mListener);
