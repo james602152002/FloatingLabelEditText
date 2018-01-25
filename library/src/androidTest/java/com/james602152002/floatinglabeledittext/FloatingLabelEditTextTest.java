@@ -285,19 +285,24 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     @Test
     public void testTouchEventOnClearBtnMode() {
         final int metaState = 0;
-        MotionEvent motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
-        90, 40,  metaState);
+        final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int y = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        customView.measure(x, y);
+        final int point_x = (int) (customView.getMeasuredWidth() * .99f);
+        final int point_y = customView.getMeasuredHeight() >> 1;
+        MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
         customView.enableClearBtn(true);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
-                90, 40,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_UP,
-                90, 40,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_UP,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_CANCEL,
-                90, 40,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_CANCEL,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
     }
 
@@ -305,23 +310,28 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     public void testTouchEventOnCancelClearBtnMode() {
         customView.enableClearBtn(true);
         final int metaState = 0;
-        MotionEvent motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
-                90, 40,  metaState);
+        final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int y = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        customView.measure(x, y);
+        final int point_x = (int) (customView.getMeasuredWidth() * .99f);
+        final int point_y = customView.getMeasuredHeight() >> 1;
+        MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
-                300, 40,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
+                point_x << 10, point_y, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
-                90, 40,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
-                90, 300,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
+                point_x, point_x << 10, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
-                300, 300,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
+                point_x << 10, point_x << 10, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_UP,
-                90, 40,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_UP,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
     }
 
@@ -329,17 +339,22 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     public void testTouchEventOnNoTouchClearBtnMode() {
         customView.enableClearBtn(true);
         final int metaState = 0;
-        MotionEvent motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
-                300, 300,  metaState);
+        final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int y = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        customView.measure(x, y);
+        final int point_x = customView.getMeasuredWidth() << 10;
+        final int point_y = customView.getMeasuredHeight() << 10;
+        MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
+                point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
-                0, 0,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
+                0, 0, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
-                0, 0,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
+                0, 0, metaState);
         customView.onTouchEvent(motionEvent);
-        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_UP,
-                0, 0,  metaState);
+        motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_UP,
+                0, 0, metaState);
         customView.onTouchEvent(motionEvent);
     }
 

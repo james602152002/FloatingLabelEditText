@@ -730,7 +730,6 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     touch_clear_btn = touchClearBtn(downX, downY);
                     if (touch_clear_btn) {
                         clearButtonPaint.setAlpha(200);
-//                        clear_btn_color = Color.RED;
                         invalidate();
                     }
                     break;
