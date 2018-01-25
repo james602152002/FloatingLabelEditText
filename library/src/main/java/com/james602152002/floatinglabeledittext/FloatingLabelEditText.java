@@ -187,7 +187,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         backgroundTypedArray.recycle();
         backgroundTypedArray = null;
 
-        clear_button_size = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_size, (int) getTextSize());
+        clear_button_size = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_size, (int) (getTextSize() * .8f));
 
         typedArray.recycle();
         typedArray = null;
