@@ -19,5 +19,6 @@
         <attr name="j_fle_enable_clear_btn" format="boolean" />
         <attr name="j_fle_clear_btn_size" format="dimension" />
         <attr name="j_fle_clear_btn_color" format="color" />
+        <attr name="j_fle_clear_btn_horizontal_margin" format="dimension"/>
     </declare-styleable>
 </resources>

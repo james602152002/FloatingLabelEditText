@@ -274,6 +274,13 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         customView.setMultiline_mode(false);
     }
 
+    @Test
+    public void testClearBtnHorizontalMargin() {
+        final int margin = 20;
+        customView.setClear_btn_horizontal_margin(margin);
+        assertEquals(margin, customView.getClear_btn_horizontal_margin());
+    }
+
     @After
     public void tearDown() throws Exception {
         customView = null;

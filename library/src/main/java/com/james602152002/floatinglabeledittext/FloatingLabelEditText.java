@@ -79,6 +79,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private String uni_code;
     private int clear_btn_color;
     private boolean enable_clear_btn = false;
+    private short clear_btn_horizontal_margin;
 
     private boolean multiline_mode = false;
 
@@ -135,6 +136,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         multiline_mode = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_multiline_mode_enable, false);
         enable_clear_btn = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_enable_clear_btn, false);
         clear_btn_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_clear_btn_color, 0xAA000000);
+        setClear_btn_horizontal_margin((short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_horizontal_margin, dp2px(5)));
 
         if (ANIM_DURATION < 0)
             ANIM_DURATION = 800;
@@ -297,7 +299,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private int getClearBtnModeRightPadding() {
-        return (enable_clear_btn ? clear_button_size : 0);
+        return (enable_clear_btn ? clear_button_size + (getClear_btn_horizontal_margin() << 1) : 0);
     }
 
     private void updatePadding() {
@@ -695,5 +697,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
     public final void setMultiline_mode(boolean enable) {
         this.multiline_mode = enable;
         setSingleLine(!enable);
+    }
+
+    public short getClear_btn_horizontal_margin() {
+        return clear_btn_horizontal_margin;
+    }
+
+    public void setClear_btn_horizontal_margin(int clear_btn_horizontal_margin) {
+        this.clear_btn_horizontal_margin = (short)clear_btn_horizontal_margin;
     }
 }
