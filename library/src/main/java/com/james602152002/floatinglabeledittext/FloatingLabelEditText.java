@@ -305,8 +305,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
 
         labelPaint.setColor(hasFocus ? highlight_color : hint_text_color);
         final float current_text_size = hint_text_size + (label_text_size - hint_text_size) * float_label_anim_percentage;

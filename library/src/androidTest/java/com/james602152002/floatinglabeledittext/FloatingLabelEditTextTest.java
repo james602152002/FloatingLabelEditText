@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.annotation.VisibleForTesting;
 import android.test.AndroidTestCase;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.james602152002.floatinglabeledittext.validator.RegexValidator;
 
@@ -60,19 +61,20 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
 
     @Test
     public void testDispatchDraw() throws NoSuchFieldException, IllegalAccessException {
+        customView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         final Canvas canvas = new Canvas();
-        customView.dispatchDraw(canvas);
+        customView.onDraw(canvas);
         customView.setText("text");
         customView.setLabel("label");
-        customView.dispatchDraw(canvas);
+        customView.onDraw(canvas);
         Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
         field.setAccessible(true);
         field.set(customView, true);
-        customView.dispatchDraw(canvas);
+        customView.onDraw(canvas);
         customView.setError("error.............................................................");
-        customView.dispatchDraw(canvas);
+        customView.onDraw(canvas);
         customView.setErrorMargin(10);
-        customView.dispatchDraw(canvas);
+        customView.onDraw(canvas);
     }
 
     @Test
@@ -255,6 +257,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         field.setAccessible(true);
         customView.enableClearBtn(true);
         assertNotNull(field.get(customView));
+        customView.onDraw(new Canvas());
         customView.enableClearBtn(true);
         customView.enableClearBtn(false);
         assertNull(field.get(customView));
