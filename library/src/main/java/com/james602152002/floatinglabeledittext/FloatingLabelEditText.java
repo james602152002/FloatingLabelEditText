@@ -136,7 +136,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         multiline_mode = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_multiline_mode_enable, false);
         enable_clear_btn = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_enable_clear_btn, false);
         clear_btn_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_clear_btn_color, 0xAA000000);
-        setClear_btn_horizontal_margin((short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_horizontal_margin, dp2px(5)));
+        clear_btn_horizontal_margin = ((short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_horizontal_margin, dp2px(5)));
 
         if (ANIM_DURATION < 0)
             ANIM_DURATION = 800;
