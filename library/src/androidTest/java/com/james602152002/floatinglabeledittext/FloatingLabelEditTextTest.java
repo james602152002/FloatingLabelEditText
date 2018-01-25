@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.support.annotation.VisibleForTesting;
 import android.test.AndroidTestCase;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +30,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     @Before
     public void setUp() throws Exception {
         customView = new FloatingLabelEditText(getContext());
+        customView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     @Test
@@ -61,7 +63,6 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
 
     @Test
     public void testDispatchDraw() throws NoSuchFieldException, IllegalAccessException {
-        customView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         final Canvas canvas = new Canvas();
         customView.onDraw(canvas);
         customView.setText("text");
@@ -279,6 +280,67 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         final int margin = 20;
         customView.setClear_btn_horizontal_margin(margin);
         assertEquals(margin, customView.getClear_btn_horizontal_margin());
+    }
+
+    @Test
+    public void testTouchEventOnClearBtnMode() {
+        final int metaState = 0;
+        MotionEvent motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
+        90, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+        customView.enableClearBtn(true);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
+                90, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_UP,
+                90, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_CANCEL,
+                90, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+    }
+
+    @Test
+    public void testTouchEventOnCancelClearBtnMode() {
+        customView.enableClearBtn(true);
+        final int metaState = 0;
+        MotionEvent motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
+                90, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
+                300, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
+                90, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
+                90, 300,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
+                300, 300,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_UP,
+                90, 40,  metaState);
+        customView.onTouchEvent(motionEvent);
+    }
+
+    @Test
+    public void testTouchEventOnNoTouchClearBtnMode() {
+        customView.enableClearBtn(true);
+        final int metaState = 0;
+        MotionEvent motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_DOWN,
+                300, 300,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
+                0, 0,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_MOVE,
+                0, 0,  metaState);
+        customView.onTouchEvent(motionEvent);
+        motionEvent = MotionEvent.obtain(100,  100, MotionEvent.ACTION_UP,
+                0, 0,  metaState);
+        customView.onTouchEvent(motionEvent);
     }
 
     @After

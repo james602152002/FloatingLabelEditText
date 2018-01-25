@@ -27,6 +27,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.animation.AccelerateInterpolator;
 
 import com.james602152002.floatinglabeledittext.validator.RegexValidator;
@@ -85,12 +86,18 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     private boolean multiline_mode = false;
 
+    private boolean touch_clear_btn = false;
+    private float downX, downY;
+    private final short touchSlop;
+    private float scale_ratio = 1.0f;
+
     public FloatingLabelEditText(Context context) {
         super(context);
         final int anti_alias_flag = Paint.ANTI_ALIAS_FLAG;
         labelPaint = new TextPaint(anti_alias_flag);
         dividerPaint = new Paint(anti_alias_flag);
         errorPaint = new TextPaint(anti_alias_flag);
+        touchSlop = (short) ViewConfiguration.get(context).getScaledTouchSlop();
         init(context, null);
     }
 
@@ -100,6 +107,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         labelPaint = new TextPaint(anti_alias_flag);
         dividerPaint = new Paint(anti_alias_flag);
         errorPaint = new TextPaint(anti_alias_flag);
+        touchSlop = (short) ViewConfiguration.get(context).getScaledTouchSlop();
         init(context, attrs);
     }
 
@@ -109,6 +117,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         labelPaint = new TextPaint(anti_alias_flag);
         dividerPaint = new Paint(anti_alias_flag);
         errorPaint = new TextPaint(anti_alias_flag);
+        touchSlop = (short) ViewConfiguration.get(context).getScaledTouchSlop();
         init(context, attrs);
     }
 
@@ -296,11 +305,11 @@ public class FloatingLabelEditText extends AppCompatEditText {
         this.padding_top = (short) top;
         this.padding_right = (short) right;
         this.padding_bottom = (short) bottom;
-        super.setPadding(left, top + label_vertical_margin + (int) label_text_size, right + getClearBtnModeRightPadding(),
+        super.setPadding(left, top + label_vertical_margin + (int) label_text_size, right + getClearBtnModePadding(),
                 bottom + divider_stroke_width + divider_vertical_margin + (!error_disabled ? (int) (error_text_size * 1.2f) + (divider_vertical_margin << 1) : 0));
     }
 
-    private int getClearBtnModeRightPadding() {
+    private int getClearBtnModePadding() {
         return (enable_clear_btn ? clear_button_size + (clear_btn_horizontal_margin << 1) : 0);
     }
 
@@ -366,7 +375,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         float xEnd;
 
         if (paint != errorPaint)
-            hint = TextUtils.ellipsize(hint, paint, getWidth() - padding_left - padding_right - label_horizontal_margin - getClearBtnModeRightPadding(), TextUtils.TruncateAt.END);
+            hint = TextUtils.ellipsize(hint, paint, getWidth() - padding_left - padding_right - label_horizontal_margin - getClearBtnModePadding(), TextUtils.TruncateAt.END);
 
         if (hint instanceof SpannableString) {
             SpannableString spannableString = (SpannableString) hint;
@@ -406,8 +415,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     private void drawClearBtn(final Canvas canvas, final int scrollX) {
         if (enable_clear_btn && getText().length() > 0) {
-            clearButtonPaint.setColor(clear_btn_color);
-            clearButtonPaint.setAlpha((int) (255 * float_label_anim_percentage));
+//            clearButtonPaint.setColor(clear_btn_color);
+//            clearButtonPaint.setAlpha((int) (255 * float_label_anim_percentage));
             String spanned = Html.fromHtml(uni_code).toString();
             if (bounds == null)
                 bounds = new Rect();
@@ -713,15 +722,58 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (enable_clear_btn)
+        if (enable_clear_btn) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    downX = event.getX();
+                    downY = event.getY();
+                    touch_clear_btn = touchClearBtn(downX, downY);
+                    if (touch_clear_btn) {
+                        clearButtonPaint.setAlpha(200);
+//                        clear_btn_color = Color.RED;
+                        invalidate();
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
+                    if (touch_clear_btn && (Math.abs(downX - event.getX()) >= touchSlop || Math.abs(downY - event.getY()) >= touchSlop)) {
+                        clearButtonPaint.setAlpha(255);
+                        invalidate();
+                        touch_clear_btn = false;
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
+                    clearButtonPaint.setAlpha(255);
+                    if (touch_clear_btn)
+                        setText(null);
+                    touch_clear_btn = false;
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    clearButtonPaint.setAlpha(255);
+                    touch_clear_btn = false;
+                    invalidate();
                     break;
             }
+        }
         return super.onTouchEvent(event);
+    }
+
+    private boolean touchClearBtn(float x, float y) {
+        float xx = x;
+        float yy = y;
+        final int width = getWidth();
+        if (getMeasuredWidth() <= 0) {
+            final int w = View.MeasureSpec.makeMeasureSpec(0,MeasureSpec.UNSPECIFIED);
+            final int h = w;
+            measure(w,h);
+        }
+        final int right = width != 0 ? width : getMeasuredWidth();
+        final int clear_btn_width = (int) (clear_button_size + (clear_btn_horizontal_margin << 1) + getScaleX());
+        final int clear_btn_top = (int) (padding_top + label_text_size);
+        final int clear_btn_bottom = clear_btn_top + label_vertical_margin + text_part_height + divider_vertical_margin;
+        if (x >= right - clear_btn_width && x <= right && y >= clear_btn_top && y <= clear_btn_bottom) {
+            return true;
+        }
+        return false;
     }
 }
