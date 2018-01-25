@@ -407,7 +407,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             String spanned = Html.fromHtml(uni_code).toString();
             Rect bounds = new Rect();
             clearButtonPaint.getTextBounds(spanned, 0, spanned.length(), bounds);
-            canvas.drawText(spanned, getWidth() - padding_right + scrollX - bounds.width(),
+            canvas.drawText(spanned, getWidth() - padding_right + scrollX - clearButtonPaint.measureText(spanned),
                     padding_top + label_text_size + ((label_vertical_margin + bounds.height() + text_part_height + divider_vertical_margin) >> 1), clearButtonPaint);
         }
     }
