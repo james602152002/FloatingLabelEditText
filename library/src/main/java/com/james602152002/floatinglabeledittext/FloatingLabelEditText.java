@@ -754,7 +754,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     touch_clear_btn = touchClearBtn(downX, downY);
                     if (touch_clear_btn) {
                         fadeClearBtnIcon(true);
-                        requestFocus();
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                requestFocus();
+                            }
+                        });
                         return true;
                     }
                     break;
