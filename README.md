@@ -134,6 +134,8 @@
     setClear_btn_color(int clear_btn_color);
     //设置清除按钮水平间距
     setClear_btn_horizontal_margin(int clear_btn_horizontal_margin);
+    //设置ttf清除图标
+    customizeClearBtn(Typeface typeface, String uni_code, int color, int clear_btn_size);
  }
  
  ```

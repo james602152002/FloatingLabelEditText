@@ -134,6 +134,8 @@ A floating label edit text you can customize your clear button by code or xml.
     setClear_btn_color(int clear_btn_color);
     //set clear button horizontal margin
     setClear_btn_horizontal_margin(int clear_btn_horizontal_margin);
+    //customize your clear button by ttf
+    customizeClearBtn(Typeface typeface, String uni_code, int color, int clear_btn_size);
  }
  
  ```
