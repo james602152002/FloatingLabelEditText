@@ -190,14 +190,14 @@ public class FloatingLabelEditText extends AppCompatEditText {
         typedArray = null;
 
         TypedArray paddingArray = context.obtainStyledAttributes(attrs, new int[]
-                {android.R.attr.padding, android.R.attr.paddingLeft, android.R.attr.paddingTop, android.R.attr.paddingBottom, android.R.attr.paddingRight});
+                {android.R.attr.padding, android.R.attr.paddingLeft, android.R.attr.paddingTop, android.R.attr.paddingRight, android.R.attr.paddingBottom});
         if (paddingArray.hasValue(0)) {
             padding_left = padding_top = padding_right = padding_bottom = (short) paddingArray.getDimensionPixelOffset(0, 0);
         } else {
-            padding_left = (short) paddingArray.getDimensionPixelOffset(1, getPaddingLeft());
-            padding_top = (short) paddingArray.getDimensionPixelOffset(2, getPaddingTop());
-            padding_right = (short) paddingArray.getDimensionPixelOffset(3, getPaddingRight());
-            padding_bottom = (short) paddingArray.getDimensionPixelOffset(4, getPaddingBottom());
+            padding_left = (short) (paddingArray.hasValue(1) ? paddingArray.getDimensionPixelOffset(1, getPaddingLeft()) : 0);
+            padding_top = (short) (paddingArray.hasValue(2) ? paddingArray.getDimensionPixelOffset(2, getPaddingTop()) : 0);
+            padding_right = (short) (paddingArray.hasValue(3) ? paddingArray.getDimensionPixelOffset(3, getPaddingRight()) : 0);
+            padding_bottom = (short) (paddingArray.hasValue(4) ? paddingArray.getDimensionPixelOffset(4, getPaddingBottom()) : 0);
         }
         paddingArray.recycle();
         paddingArray = null;
@@ -695,7 +695,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         clearButtonPaint.setColor(color);
         this.uni_code = uni_code;
         this.clear_btn_color = color;
-        this.clear_btn_size = (short)clear_btn_size;
+        this.clear_btn_size = (short) clear_btn_size;
     }
 
     private final void initClearBtn() {
@@ -717,7 +717,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     public void setClear_btn_color(int clear_btn_color) {
-        this.clear_btn_color =clear_btn_color;
+        this.clear_btn_color = clear_btn_color;
+        invalidate();
     }
 
     public int getClear_btn_color() {
@@ -726,6 +727,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public void setClear_btn_size(int clear_btn_size) {
         this.clear_btn_size = (short) clear_btn_size;
+        invalidate();
     }
 
     public int getClear_btn_size() {
@@ -738,6 +740,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public void setClear_btn_horizontal_margin(int clear_btn_horizontal_margin) {
         this.clear_btn_horizontal_margin = (short) clear_btn_horizontal_margin;
+        invalidate();
     }
 
     @Override
@@ -751,6 +754,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     touch_clear_btn = touchClearBtn(downX, downY);
                     if (touch_clear_btn) {
                         fadeClearBtnIcon(true);
+                        requestFocus();
                         return true;
                     }
                     break;
@@ -762,8 +766,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     break;
                 case MotionEvent.ACTION_UP:
                     interrupt_action_up = touch_clear_btn || terminate_click;
-                    if (touch_clear_btn)
+                    if (touch_clear_btn) {
                         setText(null);
+                    }
                     reset();
                     if (interrupt_action_up)
                         return false;
@@ -810,7 +815,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void reset() {
-        fadeClearBtnIcon(false);
+        if (terminate_click || touch_clear_btn)
+            fadeClearBtnIcon(false);
         terminate_click = false;
         touch_clear_btn = false;
     }

@@ -44,7 +44,7 @@ A floating label edit text you can customize your clear button by code or xml.
  
  ```
  dependencies {
- 	compile 'com.github.james602152002:FloatingLabelEditText:1.0.0'
+ 	compile 'com.github.james602152002:FloatingLabelEditText:1.1.0'
  }
  ```
  
@@ -79,8 +79,16 @@ A floating label edit text you can customize your clear button by code or xml.
            app:j_fle_error_anim_duration="8000"
            //validate error mode disable(default enabled)
            app:j_fle_error_disable="true"
-           //enable multiline mode
+           //enable multiline mode(default disabled)
            app:j_fle_multiline_mode_enable="true"
+           //enable clear button mode(default disabled)
+           app:j_fle_enable_clear_btn="true"
+           //set clear button size
+           app:j_fle_clear_btn_size="10dp"
+           //set clear button color
+           app:j_fle_clear_btn_color="#FF0000"
+           //set clear button horizontal margin
+           app:j_fle_clear_btn_horizontal_margin="2dp"
            />
            
  ```
@@ -116,9 +124,42 @@ A floating label edit text you can customize your clear button by code or xml.
     setError_enabled();
     //disable error mode
     setError_disabled();
+    //enable multiline mode(default disabled)
+    setMultiline_mode(boolean enable);
+    //enable clear button mode(default disabled)
+    enableClearBtn(boolean enable);
+    //set clear button size
+    setClear_btn_size(int clear_btn_size);
+    //set clear button color
+    setClear_btn_color(int clear_btn_color);
+    //set clear button horizontal margin
+    setClear_btn_horizontal_margin(int clear_btn_horizontal_margin);
  }
  
  ```
+ ## Validation Mode Usage
+  ```java
+     public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+     
+         @Override
+         protected void onCreate(Bundle savedInstanceState) {
+             super.onCreate(savedInstanceState);
+             setContentView(R.layout.activity_main);
+             //Init your floating label edit text.
+             FloatingLabelEditText label = findViewById(R.id.label);
+             //set error message and your regex.
+             label.addValidator(new RegexValidator("long error hint", "\\d+"));
+             label.addValidator(new RegexValidator("You input letters.", "[A-Za-z]+$"));
+         }
+    }
+     
+  ```
+  
+  ```
+     In validation mode, FloatingLabelEditText will check your regex by TextWatcher.
+     When your input matches, this widget will show error message below.
+  ```
+ 
  ## Proguard
  
  You don't need use proguard at all.

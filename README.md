@@ -44,7 +44,7 @@
  
  ```
  dependencies {
- 	compile 'com.github.james602152002:FloatingLabelEditText:1.0.0'
+ 	compile 'com.github.james602152002:FloatingLabelEditText:1.1.0'
  }
  ```
  
@@ -81,6 +81,14 @@
            app:j_fle_error_disable="true"
            //多行模式打开(默认关闭)
            app:j_fle_multiline_mode_enable="true"
+           //清除按钮打开(默认关闭)
+           app:j_fle_enable_clear_btn="true"
+           //设置清除按钮大小
+           app:j_fle_clear_btn_size="10dp"
+           //设置清除按钮颜色
+           app:j_fle_clear_btn_color="#FF0000"
+           //设置清除按钮水平间距
+           app:j_fle_clear_btn_horizontal_margin="2dp"
            />
            
  ```
@@ -116,8 +124,40 @@
     setError_enabled();
     //关闭错误模式
     setError_disabled();
+    //启用多行模式(默认关闭)
+    setMultiline_mode(boolean enable);
+    //清除按钮打开(默认关闭)
+    enableClearBtn(boolean enable);
+    //设置清除按钮大小
+    setClear_btn_size(int clear_btn_size);
+    //设置清除按钮颜色
+    setClear_btn_color(int clear_btn_color);
+    //设置清除按钮水平间距
+    setClear_btn_horizontal_margin(int clear_btn_horizontal_margin);
  }
  
+ ```
+ ## 验证模式使用
+ ```java
+    public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            //实例化对象
+            FloatingLabelEditText label = findViewById(R.id.label);
+            //设置错误信息以及正则表达式
+            label.addValidator(new RegexValidator("long error hint", "\\d+"));
+            label.addValidator(new RegexValidator("You input letters.", "[A-Za-z]+$"));
+        }
+   }
+    
+ ```
+ 
+ ```
+    在错误验证模式下，TextWatcher会自动依據正则表达式校验，
+    如果符合正则表达式，则显示error message于下方。
  ```
  ## 混淆
  
