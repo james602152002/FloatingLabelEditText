@@ -360,11 +360,11 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
 
     @Test
     public void testScaleRatio() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
-        Method method = FloatingLabelEditText.class.getDeclaredMethod("setScale_ratio", float.class);
+        Method method = FloatingLabelEditText.class.getDeclaredMethod("setClear_paint_alpha_ratio", float.class);
         method.setAccessible(true);
         final float scale_ratio = 3.14f;
         method.invoke(customView, scale_ratio);
-        Field field = FloatingLabelEditText.class.getDeclaredField("scale_ratio");
+        Field field = FloatingLabelEditText.class.getDeclaredField("clear_paint_alpha_ratio");
         field.setAccessible(true);
         assertEquals(scale_ratio, field.get(customView));
     }

@@ -1,6 +1,5 @@
 package com.james602152002.floatinglabeledittext;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -30,7 +29,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.BounceInterpolator;
 
 import com.james602152002.floatinglabeledittext.validator.RegexValidator;
 
@@ -91,8 +89,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private boolean touch_clear_btn = false;
     private float downX, downY;
     private final short touchSlop;
-    private float scale_ratio = 1.0f;
-    private ObjectAnimator scaleClearBtnAnimator;
+    private float clear_paint_alpha_ratio = 1.0f;
     private boolean terminate_click = false;
 
     public FloatingLabelEditText(Context context) {
@@ -419,7 +416,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     private void drawClearBtn(final Canvas canvas, final int scrollX) {
         if (enable_clear_btn && getText().length() > 0) {
-            clearButtonPaint.setTextSize(clear_button_size * scale_ratio);
+            final int alpha = (int) (((clear_btn_color >> 24) & 0xFF) * clear_paint_alpha_ratio);
+            final int color = (alpha << 24) + (clear_btn_color & 0x00FFFFFF);
+            clearButtonPaint.setColor(color);
             String spanned = Html.fromHtml(uni_code).toString();
             if (bounds == null)
                 bounds = new Rect();
@@ -726,13 +725,15 @@ public class FloatingLabelEditText extends AppCompatEditText {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (enable_clear_btn) {
+            boolean interrupt_action_up = false;
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     downX = event.getX();
                     downY = event.getY();
                     touch_clear_btn = touchClearBtn(downX, downY);
                     if (touch_clear_btn) {
-                        scaleClearBtnIcon(true);
+                        fadeClearBtnIcon(true);
+                        return true;
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -742,9 +743,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                    interrupt_action_up = touch_clear_btn || terminate_click;
                     if (touch_clear_btn)
                         setText(null);
                     reset();
+                    if (interrupt_action_up)
+                        return false;
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     reset();
@@ -771,53 +775,29 @@ public class FloatingLabelEditText extends AppCompatEditText {
         return false;
     }
 
-    private final synchronized void scaleClearBtnIcon(boolean scale_up) {
+    private final synchronized void fadeClearBtnIcon(boolean focus) {
         final float default_value = 1f;
-        final float max_value = 1.2f;
-        scaleClearBtnAnimator = ObjectAnimator.ofFloat(this, "scale_ratio", scale_up ? default_value : max_value, scale_up ? max_value : default_value);
-        scaleClearBtnAnimator.setDuration(500);
-        scaleClearBtnAnimator.setInterpolator(new BounceInterpolator());
-        scaleClearBtnAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                scaleClearBtnAnimator = null;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        if (scaleClearBtnAnimator != null)
+        final float focus_value = 0.5f;
+        final ObjectAnimator fadeClearBtnAnimator = ObjectAnimator.ofFloat(this, "clear_paint_alpha_ratio", focus ? default_value : focus_value, focus ? focus_value : default_value);
+        fadeClearBtnAnimator.setDuration(500);
+        if (fadeClearBtnAnimator != null)
             post(new Runnable() {
                 @Override
                 public void run() {
-                    if (scaleClearBtnAnimator != null)
-                        scaleClearBtnAnimator.start();
+                    if (fadeClearBtnAnimator != null)
+                        fadeClearBtnAnimator.start();
                 }
             });
     }
 
     private void reset() {
-        if (terminate_click) {
-            scaleClearBtnIcon(false);
-            terminate_click = false;
-        }
+        fadeClearBtnIcon(false);
+        terminate_click = false;
         touch_clear_btn = false;
     }
 
-    private void setScale_ratio(float scale_ratio) {
-        this.scale_ratio = scale_ratio;
+    private final void setClear_paint_alpha_ratio(float clear_paint_alpha_ratio) {
+        this.clear_paint_alpha_ratio = clear_paint_alpha_ratio;
         postInvalidate();
     }
 }
