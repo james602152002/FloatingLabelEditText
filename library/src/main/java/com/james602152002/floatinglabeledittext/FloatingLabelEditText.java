@@ -669,6 +669,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         updatePadding();
     }
 
+    // enable default clear button
     public void enableClearBtn(boolean enable) {
         enable_clear_btn = enable;
         if (enable) {
@@ -685,15 +686,16 @@ public class FloatingLabelEditText extends AppCompatEditText {
         updatePadding();
     }
 
+    // customize your clear button by ttf
     public void customizeClearBtn(Typeface typeface, String uni_code, int color, int clear_btn_size) {
         enable_clear_btn = true;
         initClearBtn();
-        clearButtonPaint.setTextSize(dp2px(10));
-        Typeface tf = Typeface.createFromAsset(getResources().getAssets(), "floating_label_edit_text_iconfont.ttf");
-        clearButtonPaint.setTypeface(tf);
+        clearButtonPaint.setTextSize(clear_btn_size);
+        clearButtonPaint.setTypeface(typeface);
         clearButtonPaint.setColor(color);
         this.uni_code = uni_code;
         this.clear_btn_color = color;
+        this.clear_button_size = (short)clear_btn_size;
     }
 
     private final void initClearBtn() {
@@ -778,7 +780,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private final synchronized void fadeClearBtnIcon(boolean focus) {
         final float default_value = 1f;
         final float focus_value = 0.5f;
-        final ObjectAnimator fadeClearBtnAnimator = ObjectAnimator.ofFloat(this, "clear_paint_alpha_ratio", focus ? default_value : focus_value, focus ? focus_value : default_value);
+        final ObjectAnimator fadeClearBtnAnimator = ObjectAnimator.ofFloat(this, "clear_paint_alpha_ratio",
+                focus ? default_value : focus_value, focus ? focus_value : default_value);
         fadeClearBtnAnimator.setDuration(500);
         if (fadeClearBtnAnimator != null)
             post(new Runnable() {
