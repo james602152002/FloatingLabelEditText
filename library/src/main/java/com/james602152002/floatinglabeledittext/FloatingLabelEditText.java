@@ -774,10 +774,15 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private final void scaleClearBtnIcon(boolean scale_up) {
         final float default_value = 1f;
         final float max_value = 1.5f;
-        if (scaleClearBtnAnimator != null) {
-            scaleClearBtnAnimator.cancel();
-            scaleClearBtnAnimator = null;
-        }
+        post(new Runnable(){
+            @Override
+            public void run() {
+                if (scaleClearBtnAnimator != null) {
+                    scaleClearBtnAnimator.cancel();
+                    scaleClearBtnAnimator = null;
+                }
+            }
+        });
         scaleClearBtnAnimator = ObjectAnimator.ofFloat(this, "scale_ratio", scale_up ? default_value : max_value, scale_up ? max_value : default_value);
         scaleClearBtnAnimator.setDuration(500);
         scaleClearBtnAnimator.setInterpolator(new BounceInterpolator());
