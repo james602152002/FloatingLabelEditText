@@ -773,16 +773,15 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     private final void scaleClearBtnIcon(boolean scale_up) {
         final float default_value = 1f;
-        final float max_value = 1.5f;
-        post(new Runnable(){
-            @Override
-            public void run() {
-                if (scaleClearBtnAnimator != null) {
+        final float max_value = 1.1f;
+        if (scaleClearBtnAnimator != null)
+            post(new Runnable() {
+                @Override
+                public void run() {
                     scaleClearBtnAnimator.cancel();
                     scaleClearBtnAnimator = null;
                 }
-            }
-        });
+            });
         scaleClearBtnAnimator = ObjectAnimator.ofFloat(this, "scale_ratio", scale_up ? default_value : max_value, scale_up ? max_value : default_value);
         scaleClearBtnAnimator.setDuration(500);
         scaleClearBtnAnimator.setInterpolator(new BounceInterpolator());
@@ -807,12 +806,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
             }
         });
-        post(new Runnable() {
-            @Override
-            public void run() {
-                scaleClearBtnAnimator.start();
-            }
-        });
+        if (scaleClearBtnAnimator != null)
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    scaleClearBtnAnimator.start();
+                }
+            });
     }
 
     private void reset() {
