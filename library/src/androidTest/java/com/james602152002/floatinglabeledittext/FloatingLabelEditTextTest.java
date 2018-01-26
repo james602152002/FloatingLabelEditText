@@ -288,6 +288,20 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     }
 
     @Test
+    public void testClearBtnColor() {
+        final int color = Color.BLUE;
+        customView.setClear_btn_color(color);
+        assertEquals(customView.getClear_btn_color(), color);
+    }
+
+    @Test
+    public void testClearBtnSize() {
+        final int size = 100;
+        customView.setClear_btn_size(size);
+        assertEquals(size, customView.getClear_btn_size());
+    }
+
+    @Test
     public void testTouchEventOnClearBtnMode() {
         final int metaState = 0;
         final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);

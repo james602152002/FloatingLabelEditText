@@ -77,7 +77,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private boolean error_disabled = false;
 
     private Paint clearButtonPaint;
-    private short clear_button_size;
+    private short clear_btn_size;
     private String uni_code;
     private int clear_btn_color;
     private boolean enable_clear_btn = false;
@@ -184,7 +184,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         backgroundTypedArray.recycle();
         backgroundTypedArray = null;
 
-        clear_button_size = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_size, (int) (getTextSize() * .8f));
+        clear_btn_size = (short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_size, (int) (getTextSize() * .8f));
 
         typedArray.recycle();
         typedArray = null;
@@ -311,7 +311,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private int getClearBtnModePadding() {
-        return (enable_clear_btn ? clear_button_size + (clear_btn_horizontal_margin << 1) : 0);
+        return (enable_clear_btn ? clear_btn_size + (clear_btn_horizontal_margin << 1) : 0);
     }
 
     private void updatePadding() {
@@ -423,7 +423,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             if (bounds == null)
                 bounds = new Rect();
             clearButtonPaint.getTextBounds(spanned, 0, spanned.length(), bounds);
-            canvas.drawText(spanned, getWidth() - padding_right + scrollX - (clear_button_size + clearButtonPaint.measureText(spanned)) * .5f - clear_btn_horizontal_margin,
+            canvas.drawText(spanned, getWidth() - padding_right + scrollX - (clear_btn_size + clearButtonPaint.measureText(spanned)) * .5f - clear_btn_horizontal_margin,
                     padding_top + label_text_size + ((label_vertical_margin + bounds.height() + text_part_height + divider_vertical_margin) >> 1), clearButtonPaint);
         }
     }
@@ -674,7 +674,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         enable_clear_btn = enable;
         if (enable) {
             initClearBtn();
-            clearButtonPaint.setTextSize(clear_button_size);
+            clearButtonPaint.setTextSize(clear_btn_size);
             Typeface tf = Typeface.createFromAsset(getResources().getAssets(), "floating_label_edit_text_iconfont.ttf");
             clearButtonPaint.setTypeface(tf);
             clearButtonPaint.setColor(clear_btn_color);
@@ -695,7 +695,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         clearButtonPaint.setColor(color);
         this.uni_code = uni_code;
         this.clear_btn_color = color;
-        this.clear_button_size = (short)clear_btn_size;
+        this.clear_btn_size = (short)clear_btn_size;
     }
 
     private final void initClearBtn() {
@@ -714,6 +714,22 @@ public class FloatingLabelEditText extends AppCompatEditText {
     public final void setMultiline_mode(boolean enable) {
         this.multiline_mode = enable;
         setSingleLine(!enable);
+    }
+
+    public void setClear_btn_color(int clear_btn_color) {
+        this.clear_btn_color =clear_btn_color;
+    }
+
+    public int getClear_btn_color() {
+        return clear_btn_color;
+    }
+
+    public void setClear_btn_size(int clear_btn_size) {
+        this.clear_btn_size = (short) clear_btn_size;
+    }
+
+    public int getClear_btn_size() {
+        return clear_btn_size;
     }
 
     public short getClear_btn_horizontal_margin() {
@@ -768,7 +784,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             measure(w, h);
         }
         final int right = width != 0 ? width : getMeasuredWidth();
-        final int clear_btn_width = (int) (clear_button_size + (clear_btn_horizontal_margin << 1) + getScaleX());
+        final int clear_btn_width = (int) (clear_btn_size + (clear_btn_horizontal_margin << 1) + getScaleX());
         final int clear_btn_top = (int) (padding_top + label_text_size);
         final int clear_btn_bottom = clear_btn_top + label_vertical_margin + text_part_height + divider_vertical_margin;
         if (x >= right - clear_btn_width && x <= right && y >= clear_btn_top && y <= clear_btn_bottom) {
