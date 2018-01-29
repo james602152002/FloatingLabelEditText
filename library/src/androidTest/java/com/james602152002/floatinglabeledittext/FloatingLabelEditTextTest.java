@@ -333,7 +333,10 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     }
 
     @Test
-    public void testTouchEventOnClearBtnMode() {
+    public void testTouchEventOnClearBtnMode() throws IllegalAccessException, NoSuchFieldException {
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
         final int metaState = 0;
         final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         final int y = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -343,6 +346,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
                 point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
+        customView.showClearButtonWithoutFocus();
         customView.enableClearBtn(true);
         customView.onTouchEvent(motionEvent);
         motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
@@ -357,7 +361,10 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     }
 
     @Test
-    public void testTouchEventOnCancelClearBtnMode() {
+    public void testTouchEventOnCancelClearBtnMode() throws IllegalAccessException, NoSuchFieldException {
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
         customView.enableClearBtn(true);
         final int metaState = 0;
         final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -368,6 +375,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
                 point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
+        customView.showClearButtonWithoutFocus();
         motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
                 point_x << 10, point_y, metaState);
         customView.onTouchEvent(motionEvent);
@@ -386,7 +394,10 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     }
 
     @Test
-    public void testTouchEventOnNoTouchClearBtnMode() {
+    public void testTouchEventOnNoTouchClearBtnMode() throws NoSuchFieldException, IllegalAccessException {
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
         customView.enableClearBtn(true);
         final int metaState = 0;
         final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -397,6 +408,7 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
                 point_x, point_y, metaState);
         customView.onTouchEvent(motionEvent);
+        customView.showClearButtonWithoutFocus();
         motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_MOVE,
                 0, 0, metaState);
         customView.onTouchEvent(motionEvent);
@@ -405,6 +417,48 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         customView.onTouchEvent(motionEvent);
         motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_UP,
                 0, 0, metaState);
+        customView.onTouchEvent(motionEvent);
+    }
+
+    @Test
+    public void testTouchEventFocus() throws NoSuchFieldException, IllegalAccessException {
+        customView.enableClearBtn(false);
+        final int metaState = 0;
+        final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int y = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        customView.measure(x, y);
+        final int point_x = (int) (customView.getMeasuredWidth() * .99f);
+        final int point_y = customView.getMeasuredHeight() >> 1;
+        MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
+                point_x, point_y, metaState);
+        customView.onTouchEvent(motionEvent);
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
+        customView.onTouchEvent(motionEvent);
+        field.set(customView, false);
+        customView.showClearButtonWithoutFocus();
+        customView.onTouchEvent(motionEvent);
+    }
+
+    @Test
+    public void testTouchEventFocusWhenEnableClearBtn() throws NoSuchFieldException, IllegalAccessException {
+        customView.enableClearBtn(true);
+        final int metaState = 0;
+        final int x = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        final int y = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        customView.measure(x, y);
+        final int point_x = (int) (customView.getMeasuredWidth() * .99f);
+        final int point_y = customView.getMeasuredHeight() >> 1;
+        MotionEvent motionEvent = MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN,
+                point_x, point_y, metaState);
+        customView.onTouchEvent(motionEvent);
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
+        customView.onTouchEvent(motionEvent);
+        field.set(customView, false);
+        customView.showClearButtonWithoutFocus();
         customView.onTouchEvent(motionEvent);
     }
 
