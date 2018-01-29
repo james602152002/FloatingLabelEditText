@@ -270,6 +270,13 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
     }
 
     @Test
+    public void testCustomizeDrawableClearBtn() {
+
+        customView.customizeClearBtn(R.drawable.ic_launcher,10);
+        customView.customizeClearBtn(R.drawable.ic_launcher,200);
+    }
+
+    @Test
     public void testSingleLine() throws IllegalAccessException, NoSuchFieldException {
         customView.setSingleLine();
         customView.setMultiline_mode(true);

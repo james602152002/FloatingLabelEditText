@@ -5,9 +5,12 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
@@ -32,6 +35,7 @@ import android.view.animation.AccelerateInterpolator;
 
 import com.james602152002.floatinglabeledittext.validator.RegexValidator;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +87,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private boolean enable_clear_btn = false;
     private short clear_btn_horizontal_margin;
     private Rect bounds;
+    private Bitmap clear_btn_bitmap;
+    private short bitmap_height;
 
     private boolean multiline_mode = false;
 
@@ -416,15 +422,21 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     private void drawClearBtn(final Canvas canvas, final int scrollX) {
         if (enable_clear_btn && getText().length() > 0) {
-            final int alpha = (int) (((clear_btn_color >> 24) & 0xFF) * clear_paint_alpha_ratio);
-            final int color = (alpha << 24) + (clear_btn_color & 0x00FFFFFF);
-            clearButtonPaint.setColor(color);
-            String spanned = Html.fromHtml(uni_code).toString();
-            if (bounds == null)
-                bounds = new Rect();
-            clearButtonPaint.getTextBounds(spanned, 0, spanned.length(), bounds);
-            canvas.drawText(spanned, getWidth() - padding_right + scrollX - (clear_btn_size + clearButtonPaint.measureText(spanned)) * .5f - clear_btn_horizontal_margin,
-                    padding_top + label_text_size + ((label_vertical_margin + bounds.height() + text_part_height + divider_vertical_margin) >> 1), clearButtonPaint);
+            if (clear_btn_bitmap == null) {
+                final int alpha = (int) (((clear_btn_color >> 24) & 0xFF) * clear_paint_alpha_ratio);
+                final int color = (alpha << 24) + (clear_btn_color & 0x00FFFFFF);
+                clearButtonPaint.setColor(color);
+                String spanned = Html.fromHtml(uni_code).toString();
+                if (bounds == null)
+                    bounds = new Rect();
+                clearButtonPaint.getTextBounds(spanned, 0, spanned.length(), bounds);
+                canvas.drawText(spanned, getWidth() - padding_right + scrollX - (clear_btn_size + clearButtonPaint.measureText(spanned)) * .5f - clear_btn_horizontal_margin,
+                        padding_top + label_text_size + ((label_vertical_margin + bounds.height() + text_part_height + divider_vertical_margin) >> 1), clearButtonPaint);
+            } else {
+                clearButtonPaint.setAlpha((int) (clear_paint_alpha_ratio * 255));
+                canvas.drawBitmap(clear_btn_bitmap, getWidth() - padding_right + scrollX - clear_btn_size - clear_btn_horizontal_margin * 3 / 2,
+                        padding_top + label_text_size + (label_vertical_margin + hint_text_size + divider_vertical_margin - bitmap_height) / 2, clearButtonPaint);
+            }
         }
     }
 
@@ -696,6 +708,48 @@ public class FloatingLabelEditText extends AppCompatEditText {
         this.uni_code = uni_code;
         this.clear_btn_color = color;
         this.clear_btn_size = (short) clear_btn_size;
+        updatePadding();
+    }
+
+    public void customizeClearBtn(int drawableId, int clear_btn_size) {
+        enable_clear_btn = true;
+        final Context context = getContext();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        Bitmap sampleBitmap = new SoftReference<>(
+                BitmapFactory.decodeResource(context.getResources(), drawableId, options)).get();
+        int sampleSize = 1;
+        final int destinationWidth = clear_btn_size;
+        int width = options.outWidth;
+        int height = options.outHeight;
+        bitmap_height = (short) (height * destinationWidth / width);
+        int destinationHeight = bitmap_height;
+        if (height > destinationHeight || width > destinationWidth) {
+            int halfHeight = height >> 1;
+            int halfWidth = width >> 1;
+            while ((halfHeight / sampleSize) > destinationHeight && (halfWidth / sampleSize) > destinationWidth) {
+                sampleSize *= 2;
+            }
+        }
+        if (sampleBitmap != null)
+            sampleBitmap.recycle();
+        sampleBitmap = null;
+        options.inSampleSize = sampleSize;
+        options.inJustDecodeBounds = false;
+        Bitmap oldBitmap = new SoftReference<>(
+                BitmapFactory.decodeResource(context.getResources(), drawableId, options)).get();
+        width = oldBitmap.getWidth();
+        height = oldBitmap.getHeight();
+        Matrix matrix = new Matrix();
+        float scaleX = ((float) destinationWidth / width);
+        float scaleY = ((float) destinationHeight / height);
+        matrix.postScale(scaleX, scaleY);
+        clear_btn_bitmap = new SoftReference<>(
+                Bitmap.createBitmap(oldBitmap, 0, 0, width, height, matrix, true)).get();
+        oldBitmap = null;
+        matrix = null;
+        initClearBtn();
+        updatePadding();
     }
 
     private final void initClearBtn() {
