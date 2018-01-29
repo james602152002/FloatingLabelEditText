@@ -254,26 +254,50 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
 
     @Test
     public void testEnableClearBtn() throws NoSuchFieldException, IllegalAccessException {
-        Field field = FloatingLabelEditText.class.getDeclaredField("clearButtonPaint");
+        final Canvas canvas = new Canvas();
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
+        field = FloatingLabelEditText.class.getDeclaredField("clearButtonPaint");
         field.setAccessible(true);
         customView.enableClearBtn(true);
         assertNotNull(field.get(customView));
-        customView.onDraw(new Canvas());
+        customView.onDraw(canvas);
+        customView.setText("text");
+        customView.onDraw(canvas);
         customView.enableClearBtn(true);
         customView.enableClearBtn(false);
         assertNull(field.get(customView));
     }
 
     @Test
-    public void testCustomizeClearBtn() {
+    public void testCustomizeClearBtn() throws IllegalAccessException, NoSuchFieldException {
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
         customView.customizeClearBtn(null, null, Color.RED, 10);
     }
 
     @Test
-    public void testCustomizeDrawableClearBtn() {
+    public void testCustomizeDrawableClearBtn() throws IllegalAccessException, NoSuchFieldException {
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
+        customView.customizeClearBtn(R.drawable.ic_launcher, 10);
+        customView.customizeClearBtn(R.drawable.ic_launcher, 200);
+    }
 
-        customView.customizeClearBtn(R.drawable.ic_launcher,10);
-        customView.customizeClearBtn(R.drawable.ic_launcher,200);
+    @Test
+    public void testCustomizeVectorDrawableClearBtn() throws NoSuchFieldException, IllegalAccessException {
+        final Canvas canvas = new Canvas();
+        customView.showClearButtonWithoutFocus();
+        customView.onDraw(canvas);
+        Field field = FloatingLabelEditText.class.getDeclaredField("hasFocus");
+        field.setAccessible(true);
+        field.set(customView, true);
+        customView.customizeClearBtn(R.drawable.ic_launcher_background, 10);
+        customView.setText("text");
+        customView.onDraw(canvas);
     }
 
     @Test

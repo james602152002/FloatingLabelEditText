@@ -44,7 +44,7 @@
  
  ```
  dependencies {
- 	compile 'com.github.james602152002:FloatingLabelEditText:1.1.0'
+ 	compile 'com.github.james602152002:FloatingLabelEditText:1.2.0'
  }
  ```
  
@@ -89,6 +89,10 @@
            app:j_fle_clear_btn_color="#FF0000"
            //设置清除按钮水平间距
            app:j_fle_clear_btn_horizontal_margin="2dp"
+           //设置png, VectorDrawable清除按钮Id
+           app:j_fle_clear_btn_id = "@drawable/icon"
+           //没焦点状况下，依然显示清除按钮(默认不显示)
+           app:j_fle_show_clear_btn_without_focus="true"
            />
            
  ```
@@ -136,6 +140,10 @@
     setClear_btn_horizontal_margin(int clear_btn_horizontal_margin);
     //设置ttf清除图标
     customizeClearBtn(Typeface typeface, String uni_code, int color, int clear_btn_size);
+    //设置png, VectorDrawable清除按钮
+    customizeClearBtn(int drawableId, int clear_btn_width);
+    //没焦点状况下，依然显示清除按钮
+    showClearButtonWithoutFocus();
  }
  
  ```

@@ -2,6 +2,7 @@ package com.james602152002.floatinglabeledittext;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -15,7 +16,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Html;
@@ -97,6 +102,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private final short touchSlop;
     private float clear_paint_alpha_ratio = 1.0f;
     private boolean terminate_click = false;
+    private boolean show_clear_button_without_focus = false;
 
     public FloatingLabelEditText(Context context) {
         super(context);
@@ -155,6 +161,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         enable_clear_btn = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_enable_clear_btn, false);
         clear_btn_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_clear_btn_color, 0xAA000000);
         clear_btn_horizontal_margin = ((short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_horizontal_margin, dp2px(5)));
+        int clear_btn_id = typedArray.getResourceId(R.styleable.FloatingLabelEditText_j_fle_clear_btn_id, -1);
+        show_clear_button_without_focus = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_clear_btn_without_focus, false);
 
         if (ANIM_DURATION < 0)
             ANIM_DURATION = 800;
@@ -215,6 +223,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
             enableClearBtn(enable_clear_btn);
         }
         updatePadding();
+        if (clear_btn_id >= 0) {
+            customizeClearBtn(clear_btn_id, clear_btn_size);
+        }
+        if (show_clear_button_without_focus) {
+            enableClearBtn(true);
+        }
     }
 
     private void initFocusChangeListener() {
@@ -372,7 +386,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
             }
         }
         canvas.drawLine(scrollX, divider_y, getWidth() + scrollX, divider_y, dividerPaint);
-        drawClearBtn(canvas, scrollX);
+        if (hasFocus || show_clear_button_without_focus)
+            drawClearBtn(canvas, scrollX);
     }
 
     private void drawSpannableString(final Canvas canvas, CharSequence hint, final TextPaint paint, final int start_x, final int start_y) {
@@ -434,7 +449,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                         padding_top + label_text_size + ((label_vertical_margin + bounds.height() + text_part_height + divider_vertical_margin) >> 1), clearButtonPaint);
             } else {
                 clearButtonPaint.setAlpha((int) (clear_paint_alpha_ratio * 255));
-                canvas.drawBitmap(clear_btn_bitmap, getWidth() - padding_right + scrollX - clear_btn_size - clear_btn_horizontal_margin * 3 / 2,
+                canvas.drawBitmap(clear_btn_bitmap, getWidth() - padding_right + scrollX - clear_btn_size - clear_btn_horizontal_margin,
                         padding_top + label_text_size + (label_vertical_margin + hint_text_size + divider_vertical_margin - bitmap_height) / 2, clearButtonPaint);
             }
         }
@@ -711,17 +726,25 @@ public class FloatingLabelEditText extends AppCompatEditText {
         updatePadding();
     }
 
-    public void customizeClearBtn(int drawableId, int clear_btn_size) {
+    public void customizeClearBtn(int drawableId, int clear_btn_width) {
         enable_clear_btn = true;
+        this.clear_btn_size = (short) clear_btn_width;
         final Context context = getContext();
+
+        final Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        final Resources resources = getResources();
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        Bitmap sampleBitmap = new SoftReference<>(
-                BitmapFactory.decodeResource(context.getResources(), drawableId, options)).get();
+        Bitmap sampleBitmap = createBitmap(drawable, resources, drawableId, options);
         int sampleSize = 1;
-        final int destinationWidth = clear_btn_size;
+        final int destinationWidth = clear_btn_width;
         int width = options.outWidth;
         int height = options.outHeight;
+        if (drawable instanceof VectorDrawable) {
+            width = drawable.getIntrinsicWidth();
+            height = drawable.getIntrinsicHeight();
+        }
         bitmap_height = (short) (height * destinationWidth / width);
         int destinationHeight = bitmap_height;
         if (height > destinationHeight || width > destinationWidth) {
@@ -736,8 +759,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         sampleBitmap = null;
         options.inSampleSize = sampleSize;
         options.inJustDecodeBounds = false;
-        Bitmap oldBitmap = new SoftReference<>(
-                BitmapFactory.decodeResource(context.getResources(), drawableId, options)).get();
+        Bitmap oldBitmap = createBitmap(drawable, resources, drawableId, options);
         width = oldBitmap.getWidth();
         height = oldBitmap.getHeight();
         Matrix matrix = new Matrix();
@@ -750,6 +772,32 @@ public class FloatingLabelEditText extends AppCompatEditText {
         matrix = null;
         initClearBtn();
         updatePadding();
+    }
+
+    private Bitmap createBitmap(Drawable drawable, Resources resources, int drawableId, BitmapFactory.Options options) {
+        if (drawable instanceof BitmapDrawable) {
+            return getBitmap(resources, drawableId, options);
+        } else if (drawable instanceof VectorDrawable) {
+            return getVectorBitmap((VectorDrawable) drawable);
+        } else {
+            throw new IllegalArgumentException("unsupported drawable type");
+        }
+    }
+
+    private Bitmap getBitmap(Resources resources, int drawableId, BitmapFactory.Options options) {
+        Bitmap bitmap = new SoftReference<>(
+                BitmapFactory.decodeResource(resources, drawableId, options)).get();
+        return bitmap;
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private Bitmap getVectorBitmap(VectorDrawable vectorDrawable) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
     }
 
     private final void initClearBtn() {
@@ -797,10 +845,15 @@ public class FloatingLabelEditText extends AppCompatEditText {
         invalidate();
     }
 
+    //Even your edit text doesn't have focus, your clear button still show at right.
+    public void showClearButtonWithoutFocus() {
+        this.show_clear_button_without_focus = true;
+        enableClearBtn(true);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (enable_clear_btn) {
-            boolean interrupt_action_up = false;
+        if (enable_clear_btn && (hasFocus || show_clear_button_without_focus)) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     downX = event.getX();
@@ -824,7 +877,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
-                    interrupt_action_up = touch_clear_btn || terminate_click;
+                    boolean interrupt_action_up = touch_clear_btn || terminate_click;
                     if (touch_clear_btn) {
                         setText(null);
                     }

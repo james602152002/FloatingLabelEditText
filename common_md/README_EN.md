@@ -44,7 +44,7 @@ A floating label edit text you can customize your clear button by code or xml.
  
  ```
  dependencies {
- 	compile 'com.github.james602152002:FloatingLabelEditText:1.1.0'
+ 	compile 'com.github.james602152002:FloatingLabelEditText:1.2.0'
  }
  ```
  
@@ -89,6 +89,10 @@ A floating label edit text you can customize your clear button by code or xml.
            app:j_fle_clear_btn_color="#FF0000"
            //set clear button horizontal margin
            app:j_fle_clear_btn_horizontal_margin="2dp"
+           //set clear button drawable or vector drawable id
+           app:j_fle_clear_btn_id = "@drawable/icon"
+           //Even your edit text doesn't have focus, your clear button still show at right.(default invisible)
+           app:j_fle_show_clear_btn_without_focus="true"
            />
            
  ```
@@ -136,6 +140,10 @@ A floating label edit text you can customize your clear button by code or xml.
     setClear_btn_horizontal_margin(int clear_btn_horizontal_margin);
     //customize your clear button by ttf
     customizeClearBtn(Typeface typeface, String uni_code, int color, int clear_btn_size);
+    //customize png or VectorDrawable clear button
+    customizeClearBtn(int drawableId, int clear_btn_width);
+    //Even your edit text doesn't have focus, your clear button still show at right.
+    showClearButtonWithoutFocus();
  }
  
  ```
