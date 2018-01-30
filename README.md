@@ -44,7 +44,7 @@
  
  ```
  dependencies {
- 	compile 'com.github.james602152002:FloatingLabelEditText:1.3.0'
+ 	compile 'com.github.james602152002:FloatingLabelEditText:1.3.1'
  }
  ```
  

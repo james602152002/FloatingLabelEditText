@@ -515,6 +515,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private void drawMaxLength(final Canvas canvas, final int dx, final float dy) {
         if (max_length_text_width == 0)
             return;
+        maxLengthPaint.setColor(text_length_display_color);
         final int text_length = getText().length();
         StringBuilder length_str_builder = new StringBuilder();
         length_str_builder.append(text_length).append("/").append(max_length);
