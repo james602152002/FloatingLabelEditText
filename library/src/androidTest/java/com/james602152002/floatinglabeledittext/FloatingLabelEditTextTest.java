@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.support.annotation.VisibleForTesting;
 import android.test.AndroidTestCase;
+import android.text.InputFilter;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -471,6 +472,27 @@ public class FloatingLabelEditTextTest extends AndroidTestCase {
         Field field = FloatingLabelEditText.class.getDeclaredField("clear_paint_alpha_ratio");
         field.setAccessible(true);
         assertEquals(scale_ratio, field.get(customView));
+    }
+
+    @Test
+    public void testInputFilters() {
+        InputFilter[] inputFilters = new InputFilter[]{new InputFilter.LengthFilter(1), new InputFilter.AllCaps()};
+        customView.setFilters(inputFilters);
+        inputFilters = new InputFilter[]{new InputFilter.AllCaps(), new InputFilter.LengthFilter(1)};
+        customView.setFilters(inputFilters);
+    }
+
+    @Test
+    public void testShowMaxTextLength() {
+        customView.showMaxTextLength(true);
+        assertTrue(customView.isShowMaxTextLength());
+    }
+
+    @Test
+    public void testTextLengthColor() {
+        final int color = Color.RED;
+        customView.setText_length_display_color(color);
+        assertEquals(customView.getText_length_display_color(), color);
     }
 
     @After

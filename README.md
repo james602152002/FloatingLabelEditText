@@ -44,7 +44,7 @@
  
  ```
  dependencies {
- 	compile 'com.github.james602152002:FloatingLabelEditText:1.2.0'
+ 	compile 'com.github.james602152002:FloatingLabelEditText:1.3.0'
  }
  ```
  
@@ -93,6 +93,10 @@
            app:j_fle_clear_btn_id = "@drawable/icon"
            //没焦点状况下，依然显示清除按钮(默认不显示)
            app:j_fle_show_clear_btn_without_focus="true"
+           //显示字数模式开关(默认关闭)
+           app:j_fle_show_text_length="true"
+           //显示字数提示颜色(默认highlight_color)
+           app:j_fle_text_length_display_color="#00FFFF"
            />
            
  ```
@@ -144,6 +148,10 @@
     customizeClearBtn(int drawableId, int clear_btn_width);
     //没焦点状况下，依然显示清除按钮
     showClearButtonWithoutFocus();
+    //显示字数模式开关(默认关闭)
+    showMaxTextLength(boolean show);
+    //显示字数提示颜色(默认highlight_color)
+    setText_length_display_color(int text_length_display_color);
  }
  
  ```

@@ -5,5 +5,5 @@
 |![](../art/disable_error_demo.gif)|![](../art/clear_mode_demo.gif)|
 |自定义清除按钮|所有类型清除按钮|
 |![](../art/customize_clear_button_demo.gif)|![](../art/all_type_clear_button_demo.gif)|
-|无焦点模式显示清除按钮||
-|![](../art/show_clear_btn_withour_focus_demo.gif)||
+|无焦点模式显示清除按钮|显示字数模式|
+|![](../art/show_clear_btn_withour_focus_demo.gif)|![](../art/show_max_length_demo.gif)|

@@ -13,7 +13,10 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -24,6 +27,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -41,6 +45,7 @@ import android.view.animation.AccelerateInterpolator;
 import com.james602152002.floatinglabeledittext.validator.RegexValidator;
 
 import java.lang.ref.SoftReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,12 +109,19 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private boolean terminate_click = false;
     private boolean show_clear_button_without_focus = false;
 
+    private int max_length;
+    private boolean show_max_length;
+    private final TextPaint maxLengthPaint;
+    private int text_length_display_color;
+    private int max_length_text_width;
+
     public FloatingLabelEditText(Context context) {
         super(context);
         final int anti_alias_flag = Paint.ANTI_ALIAS_FLAG;
         labelPaint = new TextPaint(anti_alias_flag);
         dividerPaint = new Paint(anti_alias_flag);
         errorPaint = new TextPaint(anti_alias_flag);
+        maxLengthPaint = new TextPaint(anti_alias_flag);
         touchSlop = (short) ViewConfiguration.get(context).getScaledTouchSlop();
         init(context, null);
     }
@@ -120,6 +132,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         labelPaint = new TextPaint(anti_alias_flag);
         dividerPaint = new Paint(anti_alias_flag);
         errorPaint = new TextPaint(anti_alias_flag);
+        maxLengthPaint = new TextPaint(anti_alias_flag);
         touchSlop = (short) ViewConfiguration.get(context).getScaledTouchSlop();
         init(context, attrs);
     }
@@ -130,11 +143,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
         labelPaint = new TextPaint(anti_alias_flag);
         dividerPaint = new Paint(anti_alias_flag);
         errorPaint = new TextPaint(anti_alias_flag);
+        maxLengthPaint = new TextPaint(anti_alias_flag);
         touchSlop = (short) ViewConfiguration.get(context).getScaledTouchSlop();
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
         TypedArray defaultArray = context.obtainStyledAttributes(new int[]{R.attr.colorPrimary});
         final int primary_color = defaultArray.getColor(0, 0);
         defaultArray.recycle();
@@ -163,6 +178,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         clear_btn_horizontal_margin = ((short) typedArray.getDimensionPixelOffset(R.styleable.FloatingLabelEditText_j_fle_clear_btn_horizontal_margin, dp2px(5)));
         int clear_btn_id = typedArray.getResourceId(R.styleable.FloatingLabelEditText_j_fle_clear_btn_id, -1);
         show_clear_button_without_focus = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_clear_btn_without_focus, false);
+        show_max_length = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_text_length, false);
+        text_length_display_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_text_length_display_color, highlight_color);
 
         if (ANIM_DURATION < 0)
             ANIM_DURATION = 800;
@@ -215,6 +232,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
         }
         paddingArray.recycle();
         paddingArray = null;
+
+        TypedArray text_length_array = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.maxLength});
+        max_length = text_length_array.getInteger(0, -1);
+        text_length_array.recycle();
+        text_length_array = null;
+
         setIncludeFontPadding(false);
         initFocusChangeListener();
         setSingleLine();
@@ -292,6 +315,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
             @Override
             public void afterTextChanged(Editable s) {
+                max_length_text_width = measureTextMaxLength();
                 boolean error = false;
                 if (validatorList != null) {
                     for (RegexValidator regex : validatorList) {
@@ -307,6 +331,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                 }
                 if (!error) {
                     setError(null);
+                    error_percentage = 0;
                 }
             }
         });
@@ -341,7 +366,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        final int width = getWidth();
         labelPaint.setColor(hasFocus ? highlight_color : hint_text_color);
         final float current_text_size = hint_text_size + (label_text_size - hint_text_size) * float_label_anim_percentage;
         labelPaint.setTextSize(current_text_size);
@@ -365,29 +390,45 @@ public class FloatingLabelEditText extends AppCompatEditText {
             dividerPaint.setColor(error_color);
             final int error_paint_dy = (int) (divider_y + error_text_size + divider_vertical_margin);
             final float error_text_width = errorPaint.measureText(error.toString());
-            final int hint_repeat_space_width = getWidth() / 3;
+            final int hint_repeat_space_width = width / 3;
             final float max_dx = hint_repeat_space_width + error_text_width;
             final int start_x = error_horizontal_margin - (int) (max_dx * error_percentage) + scrollX;
             errorPaint.setColor(error_color);
             if (errorAnimator != null) {
                 if (error_horizontal_margin > 0 && errorPaint.getShader() == null) {
-                    final float margin_ratio = (float) error_horizontal_margin / getWidth();
+                    final float margin_ratio = (float) error_horizontal_margin / width;
                     final float gradient_ratio = .025f;
-                    LinearGradient shader = new LinearGradient(0, 0, getWidth(), 0, new int[]{0, error_color, error_color, 0},
+                    LinearGradient shader = new LinearGradient(0, 0, width, 0, new int[]{0, error_color, error_color, 0},
                             new float[]{margin_ratio, margin_ratio + gradient_ratio, 1 - margin_ratio - gradient_ratio, 1 - margin_ratio}, Shader.TileMode.CLAMP);
                     errorPaint.setShader(shader);
                 } else if (error_horizontal_margin == 0) {
                     errorPaint.setShader(null);
                 }
             }
+            RectF widget_layer_rect = new RectF(0, 0, width + scrollX,
+                    getHeight());
+            canvas.saveLayer(widget_layer_rect, new Paint(), Canvas.ALL_SAVE_FLAG);
             drawSpannableString(canvas, error, errorPaint, start_x, error_paint_dy);
-            if (start_x < 0 && start_x + max_dx < getWidth()) {
+            if (start_x < 0 && start_x + max_dx < width) {
                 drawSpannableString(canvas, error, errorPaint, (int) (start_x + max_dx), error_paint_dy);
             }
+            if (max_length_text_width > 0) {
+                Paint paint = new Paint();
+                paint.setColor(Color.WHITE);
+                RectF rect = new RectF(width + scrollX - max_length_text_width - error_horizontal_margin, divider_y, width + scrollX,
+                        getHeight());
+                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+                canvas.drawRect(rect, paint);
+                paint.setXfermode(null);
+                canvas.restore();
+            }
         }
-        canvas.drawLine(scrollX, divider_y, getWidth() + scrollX, divider_y, dividerPaint);
-        if (hasFocus || show_clear_button_without_focus)
+        canvas.drawLine(scrollX, divider_y, width + scrollX, divider_y, dividerPaint);
+        if (hasFocus || show_clear_button_without_focus) {
             drawClearBtn(canvas, scrollX);
+        }
+        if (show_max_length)
+            drawMaxLength(canvas, width + scrollX, divider_y + error_text_size + divider_vertical_margin);
     }
 
     private void drawSpannableString(final Canvas canvas, CharSequence hint, final TextPaint paint, final int start_x, final int start_y) {
@@ -453,6 +494,32 @@ public class FloatingLabelEditText extends AppCompatEditText {
                         padding_top + label_text_size + (label_vertical_margin + hint_text_size + divider_vertical_margin - bitmap_height) / 2, clearButtonPaint);
             }
         }
+    }
+
+    private int measureTextMaxLength() {
+        if (max_length <= 0)
+            return 0;
+        if (show_max_length) {
+            final int text_length = getText().length();
+            maxLengthPaint.setTextSize(error_text_size);
+            StringBuilder length_str_builder = new StringBuilder();
+            length_str_builder.append(text_length).append("/").append(max_length);
+            String length_str = length_str_builder.toString();
+            int width = Math.round(maxLengthPaint.measureText(length_str));
+            return width;
+        } else {
+            return 0;
+        }
+    }
+
+    private void drawMaxLength(final Canvas canvas, final int dx, final float dy) {
+        if (max_length_text_width == 0)
+            return;
+        final int text_length = getText().length();
+        StringBuilder length_str_builder = new StringBuilder();
+        length_str_builder.append(text_length).append("/").append(max_length);
+        String length_str = length_str_builder.toString();
+        canvas.drawText(length_str, dx - max_length_text_width - padding_right, dy, maxLengthPaint);
     }
 
     final private void setFloat_label_anim_percentage(float float_label_anim_percentage) {
@@ -597,21 +664,16 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void startErrorAnimation() {
-        if (errorAnimator != null) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    errorAnimator.cancel();
-                    errorAnimator = null;
-                }
-            });
-        }
         final float error_length = errorPaint.measureText(error.toString());
         int w = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         measure(w, h);
         final int width = getWidth() > 0 ? getWidth() : getMeasuredWidth();
-        if (error_length > width) {
+        int max_length_width = 0;
+        if (show_max_length) {
+            max_length_text_width = measureTextMaxLength();
+        }
+        if (error_length > width - (error_horizontal_margin << 1) - max_length_width) {
             error_percentage = 0;
             if (errorAnimator == null)
                 errorAnimator = ObjectAnimator.ofFloat(this, "error_percentage", 0, 1);
@@ -629,6 +691,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
                         errorAnimator.start();
                 }
             });
+        } else {
+            error_percentage = 0;
         }
     }
 
@@ -741,7 +805,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         final int destinationWidth = clear_btn_width;
         int width = options.outWidth;
         int height = options.outHeight;
-        if (drawable instanceof VectorDrawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable instanceof VectorDrawable) {
             width = drawable.getIntrinsicWidth();
             height = drawable.getIntrinsicHeight();
         }
@@ -936,5 +1000,45 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private final void setClear_paint_alpha_ratio(float clear_paint_alpha_ratio) {
         this.clear_paint_alpha_ratio = clear_paint_alpha_ratio;
         postInvalidate();
+    }
+
+    @Override
+    public void setFilters(InputFilter[] filters) {
+        for (int i = 0; i < filters.length; i++) {
+            InputFilter filter = filters[i];
+            if (filter instanceof InputFilter.LengthFilter) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    max_length = ((InputFilter.LengthFilter) filter).getMax();
+                } else {
+                    try {
+                        Field field = InputFilter.LengthFilter.class.getDeclaredField("mMax");
+                        field.setAccessible(true);
+                        max_length = (int) field.get(filter);
+                    } catch (Exception e) {
+
+                    }
+                }
+                break;
+            }
+        }
+        super.setFilters(filters);
+    }
+
+    public void showMaxTextLength(boolean show) {
+        this.show_max_length = show;
+        invalidate();
+    }
+
+    public boolean isShowMaxTextLength() {
+        return show_max_length;
+    }
+
+    public int getText_length_display_color() {
+        return text_length_display_color;
+    }
+
+    public void setText_length_display_color(int text_length_display_color) {
+        this.text_length_display_color = text_length_display_color;
+        invalidate();
     }
 }
