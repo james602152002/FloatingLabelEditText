@@ -152,6 +152,8 @@
     showMaxTextLength(boolean show);
     //显示字数提示颜色(默认highlight_color)
     setText_length_display_color(int text_length_display_color);
+    //设置错误
+    setError(CharSequence error);
  }
  
  ```

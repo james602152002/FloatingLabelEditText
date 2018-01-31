@@ -152,6 +152,8 @@ A floating label edit text you can customize your clear button by code or xml.
     showMaxTextLength(boolean show);
     //set text length display color(default highlight_color)
     setText_length_display_color(int text_length_display_color);
+    //set error below
+    setError(CharSequence error);
  }
  
  ```
