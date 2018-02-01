@@ -7,3 +7,5 @@
 |![](../art/customize_clear_button_demo.gif)|![](../art/all_type_clear_button_demo.gif)|
 |无焦点模式显示清除按钮|显示字数模式|
 |![](../art/show_clear_btn_withour_focus_demo.gif)|![](../art/show_max_length_demo.gif)|
+|ForegroundColorSpan||
+|![](../art/spannable_string_demo.gif)||
