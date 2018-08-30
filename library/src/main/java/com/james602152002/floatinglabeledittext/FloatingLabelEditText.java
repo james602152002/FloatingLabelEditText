@@ -23,6 +23,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -270,6 +271,38 @@ public class FloatingLabelEditText extends AppCompatEditText {
                 }
             }
         });
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        super.setOnClickListener(l);
+        if (l != null) {
+//            setRawInputType(InputType.TYPE_NULL);
+//        setInputType(InputType.TYPE_NULL);
+            setFocusable(false);
+            setFocusableInTouchMode(false);
+            addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!TextUtils.isEmpty(getText().toString())) {
+                        if (float_label_anim_percentage != 1)
+                            startAnimator(0, 1);
+                    } else if (float_label_anim_percentage != 0) {
+                        startAnimator(1, 0);
+                    }
+                }
+            });
+        }
     }
 
     private void startAnimator(float startValue, float endValue) {
@@ -842,7 +875,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private Bitmap createBitmap(Drawable drawable, Resources resources, int drawableId, BitmapFactory.Options options) {
         if (drawable instanceof BitmapDrawable) {
             return getBitmap(resources, drawableId, options);
-        } else if (drawable instanceof VectorDrawable) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable instanceof VectorDrawable) {
             return getVectorBitmap((VectorDrawable) drawable);
         } else {
             throw new IllegalArgumentException("unsupported drawable type");
