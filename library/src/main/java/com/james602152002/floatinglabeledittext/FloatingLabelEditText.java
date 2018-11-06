@@ -366,6 +366,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     setError(null);
                     error_percentage = 0;
                 }
+                if (!hasFocus && !TextUtils.isEmpty(s)) {
+                    startAnimator(1, 0);
+                }
             }
         });
     }
