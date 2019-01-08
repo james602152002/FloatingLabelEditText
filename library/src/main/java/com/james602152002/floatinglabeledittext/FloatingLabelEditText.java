@@ -1078,4 +1078,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         this.text_length_display_color = text_length_display_color;
         invalidate();
     }
+
+    public boolean isError() {
+        return is_error;
+    }
 }
