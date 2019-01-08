@@ -20,7 +20,7 @@ public class RegexValidator {
 
     public String getError_message(CharSequence text) {
         if (pattern.matcher(text).matches())
-            return error_message;
-        return null;
+            return null;
+        return error_message;
     }
 }
