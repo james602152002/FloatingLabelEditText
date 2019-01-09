@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.AccelerateInterpolator;
 
+import com.james602152002.floatinglabeledittext.validator.NumberDecimalValidator;
 import com.james602152002.floatinglabeledittext.validator.RegexValidator;
 
 import java.lang.ref.SoftReference;
@@ -181,6 +182,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
         show_clear_button_without_focus = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_clear_btn_without_focus, false);
         show_max_length = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_text_length, false);
         text_length_display_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_text_length_display_color, highlight_color);
+        String decimalValidation = typedArray.getString(R.styleable.FloatingLabelEditText_j_fle_number_decimal_validation);
+        if (!TextUtils.isEmpty(decimalValidation)) {
+            addValidator(new NumberDecimalValidator(decimalValidation));
+        }
 
         if (ANIM_DURATION < 0)
             ANIM_DURATION = 800;

@@ -22,7 +22,8 @@
         <attr name="j_fle_clear_btn_horizontal_margin" format="dimension" />
         <attr name="j_fle_clear_btn_id" format="reference" />
         <attr name="j_fle_show_clear_btn_without_focus" format="boolean" />
-        <attr name="j_fle_show_text_length" format = "boolean"/>
-        <attr name="j_fle_text_length_display_color" format="color"/>
+        <attr name="j_fle_show_text_length" format="boolean" />
+        <attr name="j_fle_text_length_display_color" format="color" />
+        <attr name="j_fle_number_decimal_validation" format="string" />
     </declare-styleable>
 </resources>
