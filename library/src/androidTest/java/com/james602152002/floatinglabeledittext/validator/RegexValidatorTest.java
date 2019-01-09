@@ -22,6 +22,7 @@ public class RegexValidatorTest {
     @Before
     public void setUp() throws Exception {
         regexValidator = new RegexValidator("msg", "\\d+");
+        regexValidator = new RegexValidator("msg", "\\d+", true);
     }
 
     @Test
