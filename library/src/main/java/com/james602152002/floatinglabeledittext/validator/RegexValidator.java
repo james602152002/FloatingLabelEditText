@@ -12,7 +12,7 @@ public class RegexValidator {
 
     private Pattern pattern;
     private String error_message;
-    private boolean matches;
+    protected boolean matches;
 
     public RegexValidator(@NonNull String error_message, @NonNull String regex) {
         this.error_message = error_message;
