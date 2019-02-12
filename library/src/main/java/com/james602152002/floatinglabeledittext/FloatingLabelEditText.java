@@ -244,6 +244,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
         text_length_array.recycle();
         text_length_array = null;
 
+        TypedArray onClickTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.onClick});
+        if (!TextUtils.isEmpty(onClickTypedArray.getString(0))) {
+            initOnClickListener();
+        }
+        onClickTypedArray.recycle();
+        onClickTypedArray = null;
+
         setIncludeFontPadding(false);
         initFocusChangeListener();
         setSingleLine();
@@ -284,30 +291,34 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (l != null) {
 //            setRawInputType(InputType.TYPE_NULL);
 //        setInputType(InputType.TYPE_NULL);
-            setFocusable(false);
-            setFocusableInTouchMode(false);
-            addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (!TextUtils.isEmpty(getText().toString())) {
-                        if (float_label_anim_percentage != 1)
-                            startAnimator(0, 1);
-                    } else if (float_label_anim_percentage != 0) {
-                        startAnimator(1, 0);
-                    }
-                }
-            });
+            initOnClickListener();
         }
+    }
+
+    private void initOnClickListener() {
+        setFocusable(false);
+        setFocusableInTouchMode(false);
+        addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(getText().toString())) {
+                    if (float_label_anim_percentage != 1)
+                        startAnimator(0, 1);
+                } else if (float_label_anim_percentage != 0) {
+                    startAnimator(1, 0);
+                }
+            }
+        });
     }
 
     private void startAnimator(float startValue, float endValue) {
