@@ -30,6 +30,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -117,6 +118,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private int text_length_display_color;
     private int max_length_text_width;
 
+    private boolean isMustFill = false;
+
     public FloatingLabelEditText(Context context) {
         super(context);
         final int anti_alias_flag = Paint.ANTI_ALIAS_FLAG;
@@ -182,6 +185,13 @@ public class FloatingLabelEditText extends AppCompatEditText {
         show_clear_button_without_focus = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_clear_btn_without_focus, false);
         show_max_length = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_text_length, false);
         text_length_display_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_text_length_display_color, highlight_color);
+        isMustFill = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_must_fill_type, false);
+
+        if (isMustFill) {
+            label = new SpannableString(label + "*");
+            ((SpannableString) label).setSpan(new ForegroundColorSpan(Color.RED), label.length() - 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
         String decimalValidation = typedArray.getString(R.styleable.FloatingLabelEditText_j_fle_number_decimal_validation);
         if (!TextUtils.isEmpty(decimalValidation)) {
             addValidator(new NumberDecimalValidator(decimalValidation));
@@ -256,7 +266,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         setSingleLine();
         initTextWatcher();
         if (enable_clear_btn) {
-            enableClearBtn(enable_clear_btn);
+            enableClearBtn(true);
         }
         updatePadding();
         if (clear_btn_id >= 0) {
@@ -432,8 +442,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
         final int label_paint_dy = (int) (padding_top + label_text_size + current_text_size * (1 - float_label_anim_percentage) * .93f);
 
-        if (label != null)
+        if (label != null) {
             drawSpannableString(canvas, label, labelPaint, scrollX + label_horizontal_margin, label_paint_dy);
+        }
 
         final int divider_y = (int) (padding_top + label_text_size + label_vertical_margin + text_part_height * getLineCount() + (divider_stroke_width >> 1) + divider_vertical_margin);
         if (!is_error) {
@@ -749,7 +760,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         }
     }
 
-    private final void setError_percentage(float error_percentage) {
+    private void setError_percentage(float error_percentage) {
         this.error_percentage = error_percentage;
         invalidate();
     }
@@ -917,7 +928,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         return bitmap;
     }
 
-    private final void initClearBtn() {
+    private void initClearBtn() {
         if (clearButtonPaint == null) {
             clearButtonPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         }
@@ -1021,13 +1032,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
         final int clear_btn_width = (int) (clear_btn_size + (clear_btn_horizontal_margin << 1) + getScaleX());
         final int clear_btn_top = (int) (padding_top + label_text_size);
         final int clear_btn_bottom = clear_btn_top + label_vertical_margin + text_part_height + divider_vertical_margin;
-        if (x >= right - clear_btn_width && x <= right && y >= clear_btn_top && y <= clear_btn_bottom) {
-            return true;
-        }
-        return false;
+        return x >= right - clear_btn_width && x <= right && y >= clear_btn_top && y <= clear_btn_bottom;
     }
 
-    private final synchronized void fadeClearBtnIcon(boolean focus) {
+    private synchronized void fadeClearBtnIcon(boolean focus) {
         final float default_value = 1f;
         final float focus_value = 0.5f;
         final ObjectAnimator fadeClearBtnAnimator = ObjectAnimator.ofFloat(this, "clear_paint_alpha_ratio",
@@ -1050,7 +1058,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         touch_clear_btn = false;
     }
 
-    private final void setClear_paint_alpha_ratio(float clear_paint_alpha_ratio) {
+    private void setClear_paint_alpha_ratio(float clear_paint_alpha_ratio) {
         this.clear_paint_alpha_ratio = clear_paint_alpha_ratio;
         postInvalidate();
     }
