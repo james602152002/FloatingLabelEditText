@@ -187,11 +187,6 @@ public class FloatingLabelEditText extends AppCompatEditText {
         text_length_display_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_text_length_display_color, highlight_color);
         isMustFill = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_must_fill_type, false);
 
-        if (isMustFill) {
-            label = new SpannableString(label + "*");
-            ((SpannableString) label).setSpan(new ForegroundColorSpan(Color.RED), label.length() - 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-
         String decimalValidation = typedArray.getString(R.styleable.FloatingLabelEditText_j_fle_number_decimal_validation);
         if (!TextUtils.isEmpty(decimalValidation)) {
             addValidator(new NumberDecimalValidator(decimalValidation));
@@ -274,6 +269,11 @@ public class FloatingLabelEditText extends AppCompatEditText {
         }
         if (show_clear_button_without_focus) {
             enableClearBtn(true);
+        }
+
+        if (isMustFill) {
+            label = new SpannableString(label + "*");
+            ((SpannableString) label).setSpan(new ForegroundColorSpan(Color.RED), label.length() - 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
