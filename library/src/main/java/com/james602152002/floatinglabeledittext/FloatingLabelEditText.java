@@ -118,8 +118,6 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private int text_length_display_color;
     private int max_length_text_width;
 
-    private boolean isMustFill = false;
-
     public FloatingLabelEditText(Context context) {
         super(context);
         final int anti_alias_flag = Paint.ANTI_ALIAS_FLAG;
@@ -185,7 +183,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         show_clear_button_without_focus = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_clear_btn_without_focus, false);
         show_max_length = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_text_length, false);
         text_length_display_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_text_length_display_color, highlight_color);
-        isMustFill = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_must_fill_type, false);
+        boolean isMustFill = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_must_fill_type, false);
 
         String decimalValidation = typedArray.getString(R.styleable.FloatingLabelEditText_j_fle_number_decimal_validation);
         if (!TextUtils.isEmpty(decimalValidation)) {
@@ -308,27 +306,22 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private void initOnClickListener() {
         setFocusable(false);
         setFocusableInTouchMode(false);
-        addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(getText().toString())) {
-                    if (float_label_anim_percentage != 1)
-                        startAnimator(0, 1);
-                } else if (float_label_anim_percentage != 0) {
-                    startAnimator(1, 0);
-                }
-            }
-        });
+//        addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
     }
 
     private void startAnimator(float startValue, float endValue) {
@@ -392,8 +385,11 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     setError(null);
                     error_percentage = 0;
                 }
-                if (!hasFocus && !TextUtils.isEmpty(s)) {
-                    startAnimator(0, 1);
+                if (!TextUtils.isEmpty(getText().toString())) {
+                    if (float_label_anim_percentage != 1)
+                        startAnimator(0, 1);
+                } else if (float_label_anim_percentage != 0) {
+                    startAnimator(1, 0);
                 }
             }
         });
@@ -866,19 +862,18 @@ public class FloatingLabelEditText extends AppCompatEditText {
         options.inJustDecodeBounds = true;
         Bitmap sampleBitmap = createBitmap(drawable, resources, drawableId, options);
         int sampleSize = 1;
-        final int destinationWidth = clear_btn_width;
         int width = options.outWidth;
         int height = options.outHeight;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && drawable instanceof VectorDrawable) {
             width = drawable.getIntrinsicWidth();
             height = drawable.getIntrinsicHeight();
         }
-        bitmap_height = (short) (height * destinationWidth / width);
+        bitmap_height = (short) (height * clear_btn_width / width);
         int destinationHeight = bitmap_height;
-        if (height > destinationHeight || width > destinationWidth) {
+        if (height > destinationHeight || width > clear_btn_width) {
             int halfHeight = height >> 1;
             int halfWidth = width >> 1;
-            while ((halfHeight / sampleSize) > destinationHeight && (halfWidth / sampleSize) > destinationWidth) {
+            while ((halfHeight / sampleSize) > destinationHeight && (halfWidth / sampleSize) > clear_btn_width) {
                 sampleSize *= 2;
             }
         }
@@ -891,7 +886,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         width = oldBitmap.getWidth();
         height = oldBitmap.getHeight();
         Matrix matrix = new Matrix();
-        float scaleX = ((float) destinationWidth / width);
+        float scaleX = ((float) clear_btn_width / width);
         float scaleY = ((float) destinationHeight / height);
         matrix.postScale(scaleX, scaleY);
         clear_btn_bitmap = new SoftReference<>(
