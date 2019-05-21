@@ -270,7 +270,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         }
 
         if (isMustFill) {
-            label = new SpannableString(label + "*");
+            label = new SpannableString(label + " *");
             ((SpannableString) label).setSpan(new ForegroundColorSpan(Color.RED), label.length() - 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
