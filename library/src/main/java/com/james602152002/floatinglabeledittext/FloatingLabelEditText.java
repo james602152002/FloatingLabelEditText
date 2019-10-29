@@ -599,6 +599,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     public void setError_text_size(float error_text_size) {
         this.error_text_size = error_text_size;
         errorPaint.setTextSize(error_text_size);
+        measureTextMaxLength();
         updatePadding();
     }
 
