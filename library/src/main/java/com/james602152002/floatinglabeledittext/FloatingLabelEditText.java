@@ -385,10 +385,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     setError(null);
                     error_percentage = 0;
                 }
-                if (!TextUtils.isEmpty(getText().toString())) {
-                    if (float_label_anim_percentage != 1)
-                        startAnimator(0, 1);
-                } else if (float_label_anim_percentage != 0) {
+                if (!TextUtils.isEmpty(getText().toString()) && float_label_anim_percentage != 1) {
+                    startAnimator(0, 1);
+                } else if (TextUtils.isEmpty(getText().toString()) && float_label_anim_percentage != 0) {
                     startAnimator(1, 0);
                 }
             }
