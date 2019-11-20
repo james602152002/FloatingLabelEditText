@@ -281,9 +281,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
             public void onFocusChange(View v, boolean hasFocus) {
                 FloatingLabelEditText.this.hasFocus = hasFocus;
                 if (hasFocus) {
-                    if (float_label_anim_percentage != 1)
+                    if (float_label_anim_percentage != 1 && TextUtils.isEmpty(getText().toString()))
                         startAnimator(0, 1);
-                } else if (TextUtils.isEmpty(getText().toString()) && float_label_anim_percentage != 0) {
+                } else if (!TextUtils.isEmpty(getText().toString()) && float_label_anim_percentage != 0) {
                     startAnimator(1, 0);
                 }
                 if (customizeListener != null) {
