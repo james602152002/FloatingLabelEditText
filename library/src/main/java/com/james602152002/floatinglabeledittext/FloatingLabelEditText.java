@@ -117,6 +117,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private final TextPaint maxLengthPaint;
     private int text_length_display_color;
     private int max_length_text_width;
+    private float startValue = -1;
 
     public FloatingLabelEditText(Context context) {
         super(context);
@@ -280,11 +281,12 @@ public class FloatingLabelEditText extends AppCompatEditText {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 FloatingLabelEditText.this.hasFocus = hasFocus;
-                if (hasFocus) {
-                    if (float_label_anim_percentage != 1 && TextUtils.isEmpty(getText().toString()))
+                if (TextUtils.isEmpty(getText())) {
+                    if (hasFocus && float_label_anim_percentage != 1) {
                         startAnimator(0, 1);
-                } else if (!TextUtils.isEmpty(getText().toString()) && float_label_anim_percentage != 0) {
-                    startAnimator(1, 0);
+                    } else if (!hasFocus && float_label_anim_percentage != 0) {
+                        startAnimator(1, 0);
+                    }
                 }
                 if (customizeListener != null) {
                     customizeListener.onFocusChange(v, hasFocus);
@@ -325,6 +327,11 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     private void startAnimator(float startValue, float endValue) {
+        boolean sameAnimator = this.startValue == startValue;
+        this.startValue = startValue;
+        if (sameAnimator) {
+            return;
+        }
         final ObjectAnimator animator = ObjectAnimator.ofFloat(this, "float_label_anim_percentage", startValue, endValue);
         animator.setInterpolator(new AccelerateInterpolator(3));
         animator.setDuration(ANIM_DURATION);
