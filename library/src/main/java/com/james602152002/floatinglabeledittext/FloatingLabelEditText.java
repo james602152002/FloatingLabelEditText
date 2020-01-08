@@ -74,6 +74,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private int hint_text_color;
     private int error_color;
     private CharSequence label;
+    private CharSequence savedLabel;
     private short padding_left, padding_top, padding_right, padding_bottom;
     private short text_part_height = -1;
 
@@ -118,6 +119,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private int text_length_display_color;
     private int max_length_text_width;
     private float startValue = -1;
+    private boolean isMustFill = false;
 
     public FloatingLabelEditText(Context context) {
         super(context);
@@ -184,7 +186,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         show_clear_button_without_focus = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_clear_btn_without_focus, false);
         show_max_length = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_text_length, false);
         text_length_display_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_text_length_display_color, highlight_color);
-        boolean isMustFill = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_must_fill_type, false);
+        isMustFill = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_must_fill_type, false);
 
         String decimalValidation = typedArray.getString(R.styleable.FloatingLabelEditText_j_fle_number_decimal_validation);
         if (!TextUtils.isEmpty(decimalValidation)) {
@@ -211,6 +213,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             label = hintTypedArray.getString(0);
         else
             setHint(label);
+        savedLabel = label;
         hint_text_color = getCurrentHintTextColor();
         setHintTextColor(0);
         hintTypedArray.recycle();
@@ -269,11 +272,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         if (show_clear_button_without_focus) {
             enableClearBtn(true);
         }
-
-        if (isMustFill) {
-            label = new SpannableString(label + " *");
-            ((SpannableString) label).setSpan(new ForegroundColorSpan(Color.RED), label.length() - 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
+        updateLabel();
     }
 
     private void initFocusChangeListener() {
@@ -649,8 +648,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
 
     public void setLabel(CharSequence hint) {
-        this.label = hint;
-        invalidate();
+        this.savedLabel = hint;
+        updateLabel();
     }
 
     public void setAnimDuration(int ANIM_DURATION) {
@@ -1107,5 +1106,24 @@ public class FloatingLabelEditText extends AppCompatEditText {
 
     public boolean isError() {
         return is_error;
+    }
+
+    public boolean isMustFill() {
+        return isMustFill;
+    }
+
+    public void setMustFillMode(boolean isMustFill) {
+        this.isMustFill = isMustFill;
+        updateLabel();
+    }
+
+    private void updateLabel() {
+        if (isMustFill) {
+            label = new SpannableString(savedLabel + " *");
+            ((SpannableString) label).setSpan(new ForegroundColorSpan(Color.RED), label.length() - 1, label.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else {
+            label = savedLabel;
+        }
+        invalidate();
     }
 }
