@@ -187,6 +187,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
         show_max_length = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_show_text_length, false);
         text_length_display_color = typedArray.getColor(R.styleable.FloatingLabelEditText_j_fle_text_length_display_color, highlight_color);
         isMustFill = typedArray.getBoolean(R.styleable.FloatingLabelEditText_j_fle_must_fill_type, false);
+        final int textColorHint = typedArray.getInt(R.styleable.FloatingLabelEditText_j_fle_textColorHint, 0);
 
         String decimalValidation = typedArray.getString(R.styleable.FloatingLabelEditText_j_fle_number_decimal_validation);
         if (!TextUtils.isEmpty(decimalValidation)) {
@@ -208,14 +209,22 @@ public class FloatingLabelEditText extends AppCompatEditText {
         textTypedArray.recycle();
         textTypedArray = null;
 
-        TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint, android.R.attr.textColorHint});
+        TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint});
         if (TextUtils.isEmpty(label))
             label = hintTypedArray.getString(0);
         else
             setHint(label);
         savedLabel = label;
         hint_text_color = getCurrentHintTextColor();
-        setHintTextColor(hintTypedArray.getColor(1, 0));
+        setHintTextColor(textColorHint);
+        switch (textColorHint) {
+            case 0:
+                float_label_anim_percentage = 0;
+                break;
+            default:
+                float_label_anim_percentage = 1;
+                break;
+        }
         hintTypedArray.recycle();
         hintTypedArray = null;
 
@@ -391,9 +400,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     setError(null);
                     error_percentage = 0;
                 }
-                if ((!TextUtils.isEmpty(getText()) || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 1) {
+                if (!TextUtils.isEmpty(getText()) && float_label_anim_percentage != 1) {
                     startAnimator(0, 1);
-                } else if (TextUtils.isEmpty(getText()) && float_label_anim_percentage != 0) {
+                } else if ((TextUtils.isEmpty(getText()) || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 0) {
                     startAnimator(1, 0);
                 }
             }

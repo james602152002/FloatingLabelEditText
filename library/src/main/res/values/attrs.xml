@@ -26,5 +26,6 @@
         <attr name="j_fle_text_length_display_color" format="color" />
         <attr name="j_fle_number_decimal_validation" format="string" />
         <attr name="j_fle_must_fill_type" format="boolean" />
+        <attr name="j_fle_textColorHint" format="color" />
     </declare-styleable>
 </resources>
