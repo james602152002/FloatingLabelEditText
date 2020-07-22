@@ -1141,7 +1141,11 @@ public class FloatingLabelEditText extends AppCompatEditText {
     }
 
     public void setFLEHint(int resID) {
-        super.setHint(resID);
+        if (resID > 0) {
+            super.setHint(resID);
+        } else {
+            super.setHint(null);
+        }
         changeLabelState();
     }
 }
