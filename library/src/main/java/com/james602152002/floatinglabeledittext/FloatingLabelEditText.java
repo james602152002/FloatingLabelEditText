@@ -1144,4 +1144,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
         super.setHintTextColor(color);
         changeLabelState();
     }
+
+    public void setFLEHint(int resID) {
+        super.setHint(resID);
+        changeLabelState();
+    }
 }
