@@ -290,7 +290,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             public void onFocusChange(View v, boolean hasFocus) {
                 FloatingLabelEditText.this.hasFocus = hasFocus;
                 if (TextUtils.isEmpty(getText())) {
-                    if ((hasFocus || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 1) {
+                    if ((hasFocus || (TextUtils.isEmpty(getHint()) && getCurrentHintTextColor() != 0)) && float_label_anim_percentage != 1) {
                         startAnimator(0, 1);
                     } else if (!hasFocus && float_label_anim_percentage != 0) {
                         startAnimator(1, 0);
@@ -408,7 +408,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private void changeLabelState() {
         if (!TextUtils.isEmpty(getText()) && float_label_anim_percentage != 1) {
             startAnimator(0, 1);
-        } else if ((TextUtils.isEmpty(getText()) || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 0) {
+        } else if ((TextUtils.isEmpty(getText()) || (TextUtils.isEmpty(getHint()) && getCurrentHintTextColor() != 0)) && float_label_anim_percentage != 0) {
             startAnimator(1, 0);
         }
     }
