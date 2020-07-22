@@ -45,7 +45,7 @@
  
  ```
  dependencies {
- 	implementation 'com.github.james602152002:FloatingLabelEditText:1.6.5'
+ 	implementation 'com.github.james602152002:FloatingLabelEditText:1.6.6'
  }
  ```
  

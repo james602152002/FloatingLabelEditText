@@ -212,8 +212,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint});
         if (TextUtils.isEmpty(label))
             label = hintTypedArray.getString(0);
-        else
-            setHint(label);
+//        else
+//            setHint(label);
         savedLabel = label;
         hint_text_color = getCurrentHintTextColor();
         setHintTextColor(textColorHint);
@@ -400,7 +400,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     setError(null);
                     error_percentage = 0;
                 }
-                changeLabelState()
+                changeLabelState();
             }
         });
     }
