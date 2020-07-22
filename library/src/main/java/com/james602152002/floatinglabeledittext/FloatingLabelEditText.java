@@ -403,7 +403,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private void changeLabelState() {
         if ((!TextUtils.isEmpty(getText()) || (!TextUtils.isEmpty(getHint()) && getCurrentHintTextColor() != 0)) && float_label_anim_percentage != 1) {
             startAnimator(0, 1);
-        } else if (TextUtils.isEmpty(getText()) && float_label_anim_percentage != 0) {
+        } else if (TextUtils.isEmpty(getText()) && !(!TextUtils.isEmpty(getHint()) && getCurrentHintTextColor() != 0) && float_label_anim_percentage != 0) {
             startAnimator(1, 0);
         }
     }
