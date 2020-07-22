@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FloatingLabelEditText.iml" filepath="$PROJECT_DIR$/FloatingLabelEditText.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FloatingLabelEditText.iml" filepath="$PROJECT_DIR$/FloatingLabelEditText.iml" group="FloatingLabelEditText" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" group="FloatingLabelEditText/library" />
     </modules>
   </component>
 </project>

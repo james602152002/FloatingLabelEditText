@@ -208,14 +208,14 @@ public class FloatingLabelEditText extends AppCompatEditText {
         textTypedArray.recycle();
         textTypedArray = null;
 
-        TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint});
+        TypedArray hintTypedArray = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.hint, android.R.attr.textColorHint});
         if (TextUtils.isEmpty(label))
             label = hintTypedArray.getString(0);
         else
             setHint(label);
         savedLabel = label;
         hint_text_color = getCurrentHintTextColor();
-        setHintTextColor(0);
+        setHintTextColor(hintTypedArray.getColor(1, 0));
         hintTypedArray.recycle();
         hintTypedArray = null;
 
@@ -281,7 +281,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
             public void onFocusChange(View v, boolean hasFocus) {
                 FloatingLabelEditText.this.hasFocus = hasFocus;
                 if (TextUtils.isEmpty(getText())) {
-                    if (hasFocus && float_label_anim_percentage != 1) {
+                    if ((hasFocus || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 1) {
                         startAnimator(0, 1);
                     } else if (!hasFocus && float_label_anim_percentage != 0) {
                         startAnimator(1, 0);
@@ -391,9 +391,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     setError(null);
                     error_percentage = 0;
                 }
-                if (!TextUtils.isEmpty(getText().toString()) && float_label_anim_percentage != 1) {
+                if ((!TextUtils.isEmpty(getText()) || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 1) {
                     startAnimator(0, 1);
-                } else if (TextUtils.isEmpty(getText().toString()) && float_label_anim_percentage != 0) {
+                } else if (TextUtils.isEmpty(getText()) && float_label_anim_percentage != 0) {
                     startAnimator(1, 0);
                 }
             }
