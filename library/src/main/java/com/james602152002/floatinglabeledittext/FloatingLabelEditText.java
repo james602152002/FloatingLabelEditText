@@ -400,13 +400,17 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     setError(null);
                     error_percentage = 0;
                 }
-                if (!TextUtils.isEmpty(getText()) && float_label_anim_percentage != 1) {
-                    startAnimator(0, 1);
-                } else if ((TextUtils.isEmpty(getText()) || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 0) {
-                    startAnimator(1, 0);
-                }
+                changeLabelState()
             }
         });
+    }
+
+    private void changeLabelState() {
+        if (!TextUtils.isEmpty(getText()) && float_label_anim_percentage != 1) {
+            startAnimator(0, 1);
+        } else if ((TextUtils.isEmpty(getText()) || getCurrentHintTextColor() != 0) && float_label_anim_percentage != 0) {
+            startAnimator(1, 0);
+        }
     }
 
     private int dp2px(float dpValue) {
@@ -1134,5 +1138,10 @@ public class FloatingLabelEditText extends AppCompatEditText {
             label = savedLabel;
         }
         invalidate();
+    }
+
+    public void setFLEHintTextColor(int color) {
+        super.setHintTextColor(color);
+        changeLabelState();
     }
 }

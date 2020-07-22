@@ -45,7 +45,7 @@ A floating label edit text you can customize your clear button by code or xml.
  
  ```
  dependencies {
- 	implementation 'com.github.james602152002:FloatingLabelEditText:1.6.3'
+ 	implementation 'com.github.james602152002:FloatingLabelEditText:1.6.4'
  }
  ```
  
