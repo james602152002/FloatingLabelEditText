@@ -2,7 +2,7 @@ package com.james602152002.floatinglabeledittext;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.test.AndroidTestCase;
 import android.text.InputFilter;
 import android.view.MotionEvent;

@@ -1,6 +1,6 @@
 package com.james602152002.floatinglabeledittext.validator;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.regex.Pattern;
 
