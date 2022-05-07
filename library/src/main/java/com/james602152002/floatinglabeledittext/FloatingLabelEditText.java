@@ -1019,8 +1019,11 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     break;
                 case MotionEvent.ACTION_UP:
                     boolean interrupt_action_up = touch_clear_btn || terminate_click;
-                    if (touch_clear_btn && (clearBtnInterceptor == null || clearBtnInterceptor.onIntercept())) {
-                        setText(null);
+                    if (touch_clear_btn) {
+                        if (clearBtnInterceptor == null)
+                            setText(null);
+                        else
+                            clearBtnInterceptor.invokeTouchClearBtn();
                     }
                     reset();
                     if (interrupt_action_up)
@@ -1153,7 +1156,18 @@ public class FloatingLabelEditText extends AppCompatEditText {
         changeLabelState();
     }
 
-    public void setClearBtnInterceptor(ClearBtnInterceptor impl) {
-        clearBtnInterceptor = impl;
+    public void initClearBtnInterceptor() {
+        clearBtnInterceptor = new ClearBtnInterceptor() {
+            @Override
+            public void onProcessClear(Boolean clear) {
+                if (clear)
+                    setText(null);
+            }
+
+            @Override
+            public void invokeTouchClearBtn() {
+
+            }
+        };
     }
 }
