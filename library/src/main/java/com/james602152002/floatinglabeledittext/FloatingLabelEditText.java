@@ -23,9 +23,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
@@ -44,6 +41,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.AccelerateInterpolator;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.core.content.ContextCompat;
+
+import com.james602152002.floatinglabeledittext.intercepter.ClearBtnInterceptor;
 import com.james602152002.floatinglabeledittext.validator.NumberDecimalValidator;
 import com.james602152002.floatinglabeledittext.validator.RegexValidator;
 
@@ -120,6 +122,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
     private int max_length_text_width;
     private float startValue = -1;
     private boolean isMustFill = false;
+
+    private ClearBtnInterceptor clearBtnInterceptor;
 
     public FloatingLabelEditText(Context context) {
         super(context);
@@ -1015,7 +1019,7 @@ public class FloatingLabelEditText extends AppCompatEditText {
                     break;
                 case MotionEvent.ACTION_UP:
                     boolean interrupt_action_up = touch_clear_btn || terminate_click;
-                    if (touch_clear_btn) {
+                    if (touch_clear_btn && (clearBtnInterceptor == null || clearBtnInterceptor.onIntercept())) {
                         setText(null);
                     }
                     reset();
@@ -1147,5 +1151,9 @@ public class FloatingLabelEditText extends AppCompatEditText {
             super.setHint(null);
         }
         changeLabelState();
+    }
+
+    public void setClearBtnInterceptor(ClearBtnInterceptor impl) {
+        clearBtnInterceptor = impl;
     }
 }
