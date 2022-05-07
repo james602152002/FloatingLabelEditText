@@ -1156,18 +1156,8 @@ public class FloatingLabelEditText extends AppCompatEditText {
         changeLabelState();
     }
 
-    public void initClearBtnInterceptor() {
-        clearBtnInterceptor = new ClearBtnInterceptor() {
-            @Override
-            public void onProcessClear(Boolean clear) {
-                if (clear)
-                    setText(null);
-            }
-
-            @Override
-            public void invokeTouchClearBtn() {
-
-            }
-        };
+    public void initClearBtnInterceptor(ClearBtnInterceptor impl) {
+        if (clearBtnInterceptor == null)
+            clearBtnInterceptor = impl;
     }
 }
