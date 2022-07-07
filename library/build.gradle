@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion = "0.8.0"
+    toolVersion = "0.8.7"
 }
 
 android {
@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 30
-        versionCode 37
-        versionName "2.1.0"
+        versionCode 38
+        versionName "2.1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
