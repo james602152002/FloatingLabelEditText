@@ -48,7 +48,7 @@
     //java版本
  	implementation 'com.github.james602152002:FloatingLabelEditText:1.6.11'
  	//Kotlin版本
- 	implementation 'com.github.james602152002:FloatingLabelEditText:2.1.2'
+ 	implementation 'com.github.james602152002:FloatingLabelEditText:2.1.3'
  }
  ```
  
