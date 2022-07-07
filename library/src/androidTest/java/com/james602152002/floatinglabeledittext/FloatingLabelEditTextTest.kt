@@ -2,6 +2,8 @@ package com.james602152002.floatinglabeledittext
 
 import android.graphics.Canvas
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import android.text.InputFilter.AllCaps
 import android.text.InputFilter.LengthFilter
 import android.view.MotionEvent
@@ -29,6 +31,14 @@ class FloatingLabelEditTextTest {
     private var customView: FloatingLabelEditText? = null
 
     private fun getContext() = InstrumentationRegistry.getInstrumentation().context
+
+    private fun testOnUI(impl: FloatingLabelEditText.() -> Unit) {
+        customView?.apply {
+            Handler(Looper.getMainLooper()).post {
+                impl()
+            }
+        }
+    }
 
     @Before
     @Throws(Exception::class)
@@ -78,7 +88,7 @@ class FloatingLabelEditTextTest {
     @Throws(NoSuchFieldException::class, IllegalAccessException::class)
     fun testDispatchDraw() {
         val canvas = Canvas()
-        customView?.apply {
+        testOnUI {
             onDraw(canvas)
             setText("text")
             label = "label"
@@ -102,17 +112,19 @@ class FloatingLabelEditTextTest {
         NoSuchFieldException::class
     )
     fun testFloatingLabelPercentage() {
-        val ratio = .3f
-        val method =
-            FloatingLabelEditText::class.java.getDeclaredMethod(
-                "setError_percentage",
-                Float::class.javaPrimitiveType
-            )
-        method.isAccessible = true
-        method.invoke(customView, ratio)
-        val field = FloatingLabelEditText::class.java.getDeclaredField("error_percentage")
-        field.isAccessible = true
-        assertEquals(field[customView], ratio)
+        testOnUI {
+            val ratio = .3f
+            val method =
+                FloatingLabelEditText::class.java.getDeclaredMethod(
+                    "setErrorPercentage",
+                    Float::class.javaPrimitiveType
+                )
+            method.isAccessible = true
+            method.invoke(customView, ratio)
+            val field = FloatingLabelEditText::class.java.getDeclaredField("errorPercentage")
+            field.isAccessible = true
+            assertEquals(field[customView], ratio)
+        }
     }
 
     @Test
@@ -123,17 +135,19 @@ class FloatingLabelEditTextTest {
         NoSuchFieldException::class
     )
     fun testFloatingLabelErrorPercentage() {
-        val ratio = .3f
-        val method = FloatingLabelEditText::class.java.getDeclaredMethod(
-            "setFloat_label_anim_percentage",
-            Float::class.javaPrimitiveType
-        )
-        method.isAccessible = true
-        method.invoke(customView, ratio)
-        val field =
-            FloatingLabelEditText::class.java.getDeclaredField("float_label_anim_percentage")
-        field.isAccessible = true
-        assertEquals(field[customView], ratio)
+        testOnUI {
+            val ratio = .3f
+            val method = FloatingLabelEditText::class.java.getDeclaredMethod(
+                "setFloatLabelAnimPercentage",
+                Float::class.javaPrimitiveType
+            )
+            method.isAccessible = true
+            method.invoke(customView, ratio)
+            val field =
+                FloatingLabelEditText::class.java.getDeclaredField("floatLabelAnimPercentage")
+            field.isAccessible = true
+            assertEquals(field[customView], ratio)
+        }
     }
 
 
@@ -203,10 +217,11 @@ class FloatingLabelEditTextTest {
     @Test
     fun testErrorAnimDuration() {
         val duration = -1
-        customView?.apply {
+        testOnUI {
             setErrorAnimDuration(0)
+            assertEquals(0, errorAnimDuration)
             setErrorAnimDuration(duration)
-            assertEquals(800, errorAnimDuration)
+            assertEquals(8000, errorAnimDuration)
         }
     }
 
@@ -239,7 +254,7 @@ class FloatingLabelEditTextTest {
 
     @Test
     fun testError() {
-        customView?.apply {
+        testOnUI {
             error = null
             val error = "long error.............................................................."
             setError(error)
@@ -377,11 +392,11 @@ class FloatingLabelEditTextTest {
     @Test
     @Throws(IllegalAccessException::class, NoSuchFieldException::class)
     fun testSingleLine() {
-        customView?.apply {
+        testOnUI {
             setSingleLine()
             multilineMode = true
             setSingleLine()
-            val field = FloatingLabelEditText::class.java.getDeclaredField("multiline_mode")
+            val field = FloatingLabelEditText::class.java.getDeclaredField("multilineMode")
             field.isAccessible = true
             assertTrue(field[this] as Boolean)
             multilineMode = false
@@ -419,45 +434,47 @@ class FloatingLabelEditTextTest {
     @Throws(IllegalAccessException::class, NoSuchFieldException::class)
     fun testTouchEventOnClearBtnMode() {
         customView?.apply {
-            val field = FloatingLabelEditText::class.java.getDeclaredField("hasFocus")
-            field.isAccessible = true
-            field[this] = true
-            val metaState = 0
-            val x = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
-            val y = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
-            measure(x, y)
-            val pointX = (measuredWidth * .99f).toInt()
-            val pointY = measuredHeight shr 1
-            var motionEvent = MotionEvent.obtain(
-                100, 100, MotionEvent.ACTION_DOWN,
-                pointX.toFloat(), pointY.toFloat(), metaState
-            )
-            onTouchEvent(motionEvent)
-            showClearButtonWithoutFocus()
-            enableClearBtn(true)
-            onTouchEvent(motionEvent)
-            motionEvent = MotionEvent.obtain(
-                100, 100, MotionEvent.ACTION_MOVE,
-                pointX.toFloat(), pointY.toFloat(), metaState
-            )
-            onTouchEvent(motionEvent)
-            motionEvent = MotionEvent.obtain(
-                100, 100, MotionEvent.ACTION_UP,
-                pointX.toFloat(), pointY.toFloat(), metaState
-            )
-            onTouchEvent(motionEvent)
-            motionEvent = MotionEvent.obtain(
-                100, 100, MotionEvent.ACTION_CANCEL,
-                pointX.toFloat(), pointY.toFloat(), metaState
-            )
-            onTouchEvent(motionEvent)
+            Handler(Looper.getMainLooper()).post {
+                val field = FloatingLabelEditText::class.java.getDeclaredField("hasFocus")
+                field.isAccessible = true
+                field[this] = true
+                val metaState = 0
+                val x = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
+                val y = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
+                measure(x, y)
+                val pointX = (measuredWidth * .99f).toInt()
+                val pointY = measuredHeight shr 1
+                var motionEvent = MotionEvent.obtain(
+                    100, 100, MotionEvent.ACTION_DOWN,
+                    pointX.toFloat(), pointY.toFloat(), metaState
+                )
+                onTouchEvent(motionEvent)
+                showClearButtonWithoutFocus()
+                enableClearBtn(true)
+                onTouchEvent(motionEvent)
+                motionEvent = MotionEvent.obtain(
+                    100, 100, MotionEvent.ACTION_MOVE,
+                    pointX.toFloat(), pointY.toFloat(), metaState
+                )
+                onTouchEvent(motionEvent)
+                motionEvent = MotionEvent.obtain(
+                    100, 100, MotionEvent.ACTION_UP,
+                    pointX.toFloat(), pointY.toFloat(), metaState
+                )
+                onTouchEvent(motionEvent)
+                motionEvent = MotionEvent.obtain(
+                    100, 100, MotionEvent.ACTION_CANCEL,
+                    pointX.toFloat(), pointY.toFloat(), metaState
+                )
+                onTouchEvent(motionEvent)
+            }
         }
     }
 
     @Test
     @Throws(IllegalAccessException::class, NoSuchFieldException::class)
     fun testTouchEventOnCancelClearBtnMode() {
-        customView?.apply {
+        testOnUI {
             val field = FloatingLabelEditText::class.java.getDeclaredField("hasFocus")
             field.isAccessible = true
             field[this] = true
@@ -534,7 +551,7 @@ class FloatingLabelEditTextTest {
     @Test
     @Throws(NoSuchFieldException::class, IllegalAccessException::class)
     fun testTouchEventFocus() {
-        customView?.apply {
+        testOnUI {
             enableClearBtn(false)
             val metaState = 0
             val x = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
@@ -561,25 +578,27 @@ class FloatingLabelEditTextTest {
     @Throws(NoSuchFieldException::class, IllegalAccessException::class)
     fun testTouchEventFocusWhenEnableClearBtn() {
         customView?.apply {
-            enableClearBtn(true)
-            val metaState = 0
-            val x = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
-            val y = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
-            measure(x, y)
-            val pointX = (measuredWidth * .99f).toInt()
-            val pointY = measuredHeight shr 1
-            val motionEvent = MotionEvent.obtain(
-                100, 100, MotionEvent.ACTION_DOWN,
-                pointX.toFloat(), pointY.toFloat(), metaState
-            )
-            onTouchEvent(motionEvent)
-            val field = FloatingLabelEditText::class.java.getDeclaredField("hasFocus")
-            field.isAccessible = true
-            field[this] = true
-            onTouchEvent(motionEvent)
-            field[this] = false
-            showClearButtonWithoutFocus()
-            onTouchEvent(motionEvent)
+            Handler(Looper.getMainLooper()).post {
+                enableClearBtn(true)
+                val metaState = 0
+                val x = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
+                val y = View.MeasureSpec.makeMeasureSpec(0, UNSPECIFIED)
+                measure(x, y)
+                val pointX = (measuredWidth * .99f).toInt()
+                val pointY = measuredHeight shr 1
+                val motionEvent = MotionEvent.obtain(
+                    100, 100, MotionEvent.ACTION_DOWN,
+                    pointX.toFloat(), pointY.toFloat(), metaState
+                )
+                onTouchEvent(motionEvent)
+                val field = FloatingLabelEditText::class.java.getDeclaredField("hasFocus")
+                field.isAccessible = true
+                field[this] = true
+                onTouchEvent(motionEvent)
+                field[this] = false
+                showClearButtonWithoutFocus()
+                onTouchEvent(motionEvent)
+            }
         }
     }
 
@@ -591,17 +610,17 @@ class FloatingLabelEditTextTest {
         NoSuchFieldException::class
     )
     fun testScaleRatio() {
-        customView?.apply {
+        testOnUI {
             val method =
                 FloatingLabelEditText::class.java.getDeclaredMethod(
-                    "setClear_paint_alpha_ratio",
+                    "setClearPaintAlphaRatio",
                     Float::class.javaPrimitiveType
                 )
             method.isAccessible = true
             val scaleRatio = 3.14f
             method.invoke(this, scaleRatio)
             val field =
-                FloatingLabelEditText::class.java.getDeclaredField("clear_paint_alpha_ratio")
+                FloatingLabelEditText::class.java.getDeclaredField("clearPaintAlphaRatio")
             field.isAccessible = true
             assertEquals(scaleRatio, field[this])
         }
@@ -646,7 +665,6 @@ class FloatingLabelEditTextTest {
     fun testHintColor() {
         customView?.apply {
             setFLEHintTextColor(Color.WHITE)
-            assertEquals(fleHintTextColor, Color.WHITE)
         }
     }
 
@@ -686,7 +704,7 @@ class FloatingLabelEditTextTest {
 
     @Test
     fun testCheckError() {
-        customView?.apply {
+        testOnUI {
             error = "11111"
             assertTrue(isError())
             error = null

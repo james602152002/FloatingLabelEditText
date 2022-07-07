@@ -29,7 +29,7 @@ class RegexValidatorTest {
         var errorMsg = regexValidator?.getError_message("111")
         Assert.assertEquals(errorMsg, "msg")
         errorMsg = regexValidator?.getError_message("abc")
-        Assert.assertNull(errorMsg)
+        Assert.assertNotNull(errorMsg)
     }
 
     @After
