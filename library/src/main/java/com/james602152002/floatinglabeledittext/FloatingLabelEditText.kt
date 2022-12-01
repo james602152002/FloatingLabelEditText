@@ -93,6 +93,23 @@ class FloatingLabelEditText : AppCompatEditText {
     private var startValue = -1f
     var isMustFill = false
         private set
+
+    //if mark changed then updateLabel
+    var mustFillMark: CharSequence? = " *"
+        set(value) {
+            if (field != value) {
+                field = value
+                updateLabel()
+            }
+        }
+    var normalMark: CharSequence? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                updateLabel()
+            }
+        }
+
     private var clearBtnInterceptor: ClearBtnInterceptor? = null
 
     private val widgetLayerRect = RectF()
@@ -1252,16 +1269,11 @@ class FloatingLabelEditText : AppCompatEditText {
     private fun initLabel(): CharSequence? {
         return when (isMustFill) {
             true -> {
-                SpannableString(savedLabel.toString() + " *").apply {
-                    setSpan(
-                        ForegroundColorSpan(Color.RED),
-                        length - 1,
-                        length,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                }
+                initMustFillSpan()
             }
-            else -> savedLabel
+            else -> {
+                initNormalSpan()
+            }
         }
     }
 
@@ -1288,4 +1300,24 @@ class FloatingLabelEditText : AppCompatEditText {
         if (clearBtnInterceptor == null) clearBtnInterceptor = impl
     }
 
+    private fun initMustFillSpan() = initSpan(mustFillMark)
+
+    private fun initNormalSpan() = initSpan(normalMark)
+
+    private fun initSpan(mark: CharSequence?): CharSequence? {
+        return when (mark.isNullOrEmpty()) {
+            true -> savedLabel
+            else -> SpannableString("$savedLabel$mark").apply {
+                val markLength = mark.length
+                val index = length - markLength
+                if (index in indices) {
+                    setSpan(
+                        ForegroundColorSpan(Color.RED),
+                        index, length,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            }
+        }
+    }
 }
