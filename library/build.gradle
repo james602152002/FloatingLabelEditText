@@ -7,12 +7,13 @@ jacoco {
 }
 
 android {
+    namespace 'com.james602152002.floatinglabeledittext'
     compileSdkVersion 33
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 33
         versionCode 42
-        versionName "2.2.0"
+        versionName "2.2.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         multiDexEnabled true
     }

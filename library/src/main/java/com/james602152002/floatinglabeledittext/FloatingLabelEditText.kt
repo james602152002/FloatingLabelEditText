@@ -20,6 +20,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
+import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewConfiguration
 import android.view.animation.AccelerateInterpolator
@@ -31,8 +32,10 @@ import com.james602152002.floatinglabeledittext.intercepter.ClearBtnInterceptor
 import com.james602152002.floatinglabeledittext.validator.NumberDecimalValidator
 import com.james602152002.floatinglabeledittext.validator.RegexValidator
 import kotlinx.coroutines.*
+import java.lang.Integer.max
 import java.lang.ref.SoftReference
 import kotlin.math.abs
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -175,6 +178,20 @@ class FloatingLabelEditText : AppCompatEditText {
     var multilineMode = false
         set(value) {
             field = value
+            if (value) {
+                overScrollMode = View.OVER_SCROLL_ALWAYS
+                scrollBarStyle = View.SCROLLBARS_INSIDE_INSET
+                isVerticalScrollBarEnabled = true
+                setOnTouchListener { view, event ->
+                    view.parent.requestDisallowInterceptTouchEvent(true)
+                    if ((event.action and MotionEvent.ACTION_MASK) == MotionEvent.ACTION_UP) {
+                        view.parent.requestDisallowInterceptTouchEvent(false)
+                    }
+                    return@setOnTouchListener false
+                }
+            } else {
+                setOnTouchListener(null)
+            }
             isSingleLine = !value
         }
     var textLengthDisplayColor = 0
@@ -266,7 +283,10 @@ class FloatingLabelEditText : AppCompatEditText {
         var clearBtnId = 0
         var textColorHint = 0
 
-        attrSetInitializer(null, intArrayOf(R.attr.colorPrimary)) {
+        attrSetInitializer(
+            null,
+            intArrayOf(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) android.R.attr.colorPrimary else primaryColor)
+        ) {
             primaryColor = it.getColor(0, 0)
         }
 
@@ -438,7 +458,10 @@ class FloatingLabelEditText : AppCompatEditText {
             }
         }
 
-        attrSetInitializer(attrs, intArrayOf(android.R.attr.maxLength)) { textLengthArray ->
+        attrSetInitializer(
+            attrs,
+            intArrayOf(android.R.attr.maxLength)
+        ) { textLengthArray ->
             maxLength = textLengthArray.getInteger(0, -1)
         }
 
@@ -520,6 +543,19 @@ class FloatingLabelEditText : AppCompatEditText {
         animator.interpolator = AccelerateInterpolator(3f)
         animator.duration = animDuration.toLong()
         post { animator.start() }
+    }
+
+    override fun setMaxLines(maxLines: Int) {
+        super.setMaxLines(maxLines)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            when (maxHeight) {
+                Integer.MAX_VALUE,
+                -1 -> {
+                }
+
+                else -> maxHeight
+            }
+        }
     }
 
     override fun setOnFocusChangeListener(l: OnFocusChangeListener) {
@@ -631,11 +667,26 @@ class FloatingLabelEditText : AppCompatEditText {
                 label,
                 labelPaint,
                 scrollX + labelHorizontalMargin,
-                labelPaintDy
+                labelPaintDy + scrollY
             )
         }
+
+        val measuredLineHeight = textPartHeight * max(1, lineCount)
+        val linesHeight = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            when (maxHeight) {
+                Integer.MAX_VALUE,
+                -1 -> measuredLineHeight
+
+                else -> min(
+                    maxHeight - (paddingTop + paddingBottom),
+                    measuredLineHeight
+                )
+            }
+        } else {
+            textPartHeight * measuredLineHeight
+        }
         val dividerY: Int =
-            (flePaddingTop + labelTextSize + labelVerticalMargin + textPartHeight * lineCount + (dividerStrokeWidth shr 1) + dividerVerticalMargin).toInt()
+            (flePaddingTop + labelTextSize + labelVerticalMargin + linesHeight + (dividerStrokeWidth shr 1) + dividerVerticalMargin + scrollY).toInt()
         if (!isError) {
             dividerPaint.color = if (hasFocus) highlightColor else dividerColor
         } else {
@@ -681,7 +732,6 @@ class FloatingLabelEditText : AppCompatEditText {
                 @Suppress("DEPRECATION")
                 canvas.saveLayer(widgetLayerRect, widgetLayerPaint, Canvas.ALL_SAVE_FLAG)
             }
-
 
             drawSpannableString(canvas, error, errorPaint, startX, errorPaintDy)
             if (startX < 0 && startX + maxDx < width) {
@@ -817,7 +867,7 @@ class FloatingLabelEditText : AppCompatEditText {
                         width - flePaddingRight + scrollX - (clearBtnSize + paint.measureText(
                             spanned
                         )) * .5f - clearBtnHorizontalMargin,
-                        flePaddingTop + labelTextSize + (labelVerticalMargin + bounds.height() + textPartHeight + dividerVerticalMargin shr 1),
+                        flePaddingTop + labelTextSize + scrollY + (labelVerticalMargin + bounds.height() + textPartHeight + dividerVerticalMargin shr 1),
                         paint
                     )
                 }
@@ -826,7 +876,7 @@ class FloatingLabelEditText : AppCompatEditText {
                 canvas.drawBitmap(
                     bitmap,
                     (width - flePaddingRight + scrollX - clearBtnSize - clearBtnHorizontalMargin).toFloat(),
-                    flePaddingTop + labelTextSize + (labelVerticalMargin + hintTextSize + dividerVerticalMargin - bitmapHeight) / 2,
+                    flePaddingTop + labelTextSize + scrollY + (labelVerticalMargin + hintTextSize + dividerVerticalMargin - bitmapHeight) / 2,
                     clearButtonPaint
                 )
             }
@@ -1169,6 +1219,7 @@ class FloatingLabelEditText : AppCompatEditText {
                         return true
                     }
                 }
+
                 MotionEvent.ACTION_MOVE -> if (touchClearBtn && (abs(downX - event.x) >= touchSlop || abs(
                         downY - event.y
                     ) >= touchSlop)
@@ -1176,6 +1227,7 @@ class FloatingLabelEditText : AppCompatEditText {
                     touchClearBtn = false
                     terminateClick = true
                 }
+
                 MotionEvent.ACTION_UP -> {
                     val interruptActionUp = touchClearBtn || terminateClick
                     if (touchClearBtn) {
@@ -1186,6 +1238,7 @@ class FloatingLabelEditText : AppCompatEditText {
                     reset()
                     if (interruptActionUp) return false
                 }
+
                 MotionEvent.ACTION_CANCEL -> reset()
             }
         }
@@ -1201,7 +1254,7 @@ class FloatingLabelEditText : AppCompatEditText {
         val right = if (width != 0) width else measuredWidth
         val clearBtnWidth: Int =
             (clearBtnSize + (clearBtnHorizontalMargin shl 1) + scaleX).toInt()
-        val clearBtnTop = (flePaddingTop + labelTextSize).toInt()
+        val clearBtnTop = (flePaddingTop + labelTextSize + scrollY).toInt()
         val clearBtnBottom =
             clearBtnTop + labelVerticalMargin + textPartHeight + dividerVerticalMargin
         return x >= right - clearBtnWidth && x <= right && y >= clearBtnTop && y <= clearBtnBottom
@@ -1271,6 +1324,7 @@ class FloatingLabelEditText : AppCompatEditText {
             true -> {
                 initMustFillSpan()
             }
+
             else -> {
                 initNormalSpan()
             }
