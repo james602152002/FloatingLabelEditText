@@ -1208,38 +1208,55 @@ class FloatingLabelEditText : AppCompatEditText {
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (enableClearBtn && (hasFocus || showClearButtonWithoutFocus)) {
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    downX = event.x
-                    downY = event.y
-                    touchClearBtn = touchClearBtn(downX, downY)
-                    if (touchClearBtn) {
-                        fadeClearBtnIcon(true)
-                        post { requestFocus() }
-                        return true
-                    }
-                }
+            val result = kotlin.runCatching {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        downX = event.x
+                        downY = event.y
+                        touchClearBtn = touchClearBtn(downX, downY)
+                        if (touchClearBtn) {
+                            fadeClearBtnIcon(true)
+                            post { requestFocus() }
+                            return@runCatching true
+                        } else {
 
-                MotionEvent.ACTION_MOVE -> if (touchClearBtn && (abs(downX - event.x) >= touchSlop || abs(
-                        downY - event.y
-                    ) >= touchSlop)
-                ) {
-                    touchClearBtn = false
-                    terminateClick = true
-                }
-
-                MotionEvent.ACTION_UP -> {
-                    val interruptActionUp = touchClearBtn || terminateClick
-                    if (touchClearBtn) {
-                        clearBtnInterceptor?.invokeTouchClearBtn() ?: kotlin.run {
-                            text = null
                         }
                     }
-                    reset()
-                    if (interruptActionUp) return false
-                }
 
-                MotionEvent.ACTION_CANCEL -> reset()
+                    MotionEvent.ACTION_MOVE -> if (touchClearBtn && (abs(downX - event.x) >= touchSlop || abs(
+                            downY - event.y
+                        ) >= touchSlop)
+                    ) {
+                        touchClearBtn = false
+                        terminateClick = true
+                    } else {
+
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val interruptActionUp = touchClearBtn || terminateClick
+                        if (touchClearBtn) {
+                            clearBtnInterceptor?.invokeTouchClearBtn() ?: kotlin.run {
+                                text = null
+                            }
+                        } else {
+
+                        }
+                        reset()
+                        if (interruptActionUp) {
+                            return@runCatching false
+                        } else {
+
+                        }
+                    }
+
+                    MotionEvent.ACTION_CANCEL -> reset()
+                    else -> {}
+                }
+//                return false
+            }.getOrNull()
+            if (result is Boolean) {
+                return result
             }
         }
         return super.onTouchEvent(event)
